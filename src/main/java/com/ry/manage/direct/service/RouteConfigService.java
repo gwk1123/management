@@ -27,15 +27,15 @@ public interface RouteConfigService extends IService<RouteConfig> {
      IPage<RouteConfig> pageRouteConfig(Page<RouteConfig> page,RouteConfig routeConfig);
 
     /**
-     * 新增航线路由信息(ml_route_config) 
+     * 新增航线路由信息(ml_route_config)
      *
-     * @param routeConfig 航线路由信息(ml_route_config) 
+     * @param routeConfig 航线路由信息(ml_route_config)
      * @return boolean
      */
     boolean saveRouteConfig(RouteConfig routeConfig);
 
     /**
-     * 删除航线路由信息(ml_route_config) 
+     * 删除航线路由信息(ml_route_config)
      *
      * @param id 主键
      * @return boolean
@@ -43,7 +43,7 @@ public interface RouteConfigService extends IService<RouteConfig> {
     boolean removeRouteConfig(String id);
 
     /**
-     * 批量删除航线路由信息(ml_route_config) 
+     * 批量删除航线路由信息(ml_route_config)
      *
      * @param ids 主键集合
      * @return boolean
@@ -51,9 +51,9 @@ public interface RouteConfigService extends IService<RouteConfig> {
     boolean removeRouteConfigByIds(List<String> ids);
 
     /**
-     * 修改航线路由信息(ml_route_config) 
+     * 修改航线路由信息(ml_route_config)
      *
-     * @param routeConfig 航线路由信息(ml_route_config) 
+     * @param routeConfig 航线路由信息(ml_route_config)
      * @return boolean
      */
     boolean updateRouteConfig(RouteConfig routeConfig);
@@ -65,4 +65,11 @@ public interface RouteConfigService extends IService<RouteConfig> {
      * @return RouteConfig
      */
     RouteConfig getRouteConfigById(String id);
+
+    /**
+     * 更改状态
+     * @param routeConfig
+     * @return
+     */
+    boolean changeRouteConfigStatus(RouteConfig routeConfig);
 }

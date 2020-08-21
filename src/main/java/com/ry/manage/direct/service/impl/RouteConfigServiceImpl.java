@@ -4,9 +4,12 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ry.manage.common.constant.DirectConstants;
+import com.ry.manage.direct.entity.OtaSite;
 import com.ry.manage.direct.entity.RouteConfig;
 import com.ry.manage.direct.mapper.RouteConfigMapper;
 import com.ry.manage.direct.service.RouteConfigService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -28,17 +31,15 @@ public class RouteConfigServiceImpl extends ServiceImpl<RouteConfigMapper, Route
 
     @Override
     public  IPage<RouteConfig> pageRouteConfig(Page<RouteConfig> page,RouteConfig routeConfig){
-
         page = Optional.ofNullable(page).orElse(new Page<>());
-        QueryWrapper<RouteConfig> queryWrapper = new QueryWrapper<>();
-
+        QueryWrapper<RouteConfig> queryWrapper =this.buildQueryWrapper(routeConfig);
         return  this.page(page, queryWrapper);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean saveRouteConfig(RouteConfig routeConfig){
-        Assert.notNull(routeConfig, "航线路由信息(ml_route_config) 为空");
+        Assert.notNull(routeConfig, "航线路由信息为空");
         return this.save(routeConfig);
     }
 
@@ -46,7 +47,9 @@ public class RouteConfigServiceImpl extends ServiceImpl<RouteConfigMapper, Route
     @Transactional(rollbackFor = Exception.class)
     public boolean removeRouteConfig(String id){
         Assert.hasText(id, "主键为空");
-        return this.removeById(id);
+        RouteConfig routeConfig =this.getById(id);
+        routeConfig.setStatus(DirectConstants.DELETE);
+        return this.updateById(routeConfig);
     }
 
     @Override
@@ -64,7 +67,30 @@ public class RouteConfigServiceImpl extends ServiceImpl<RouteConfigMapper, Route
     }
 
     @Override
+    public boolean changeRouteConfigStatus(RouteConfig routeConfig){
+        RouteConfig status = this.getById(routeConfig.getId());
+        status.setStatus(routeConfig.getStatus());
+        return this.updateById(status);
+    }
+
+    @Override
     public RouteConfig getRouteConfigById(String id){
         return  this.getById(id);
     }
+
+    public QueryWrapper<RouteConfig> buildQueryWrapper(RouteConfig routeConfig){
+        QueryWrapper<RouteConfig> routeConfigQueryWrapper=new QueryWrapper<>();
+        if(routeConfig != null){
+            routeConfigQueryWrapper.lambda().like(StringUtils.isNotBlank(routeConfig.getDepCity()), RouteConfig::getDepCity,routeConfig.getDepCity())
+                    .like(StringUtils.isNotBlank(routeConfig.getArrCity()),RouteConfig::getArrCity,routeConfig.getArrCity());
+        }
+        if(routeConfig != null && StringUtils.isNotBlank(routeConfig.getStatus())){
+            routeConfigQueryWrapper.lambda().eq(StringUtils.isNotBlank(routeConfig.getStatus()),RouteConfig::getStatus,routeConfig.getStatus());
+        }else {
+            routeConfigQueryWrapper.and(wrapper -> wrapper.lambda().eq(RouteConfig::getStatus, DirectConstants.NORMAL).or().eq(RouteConfig::getStatus,DirectConstants.FAILURE));
+        }
+        routeConfigQueryWrapper.lambda().orderByAsc(RouteConfig::getCreateTime);
+        return routeConfigQueryWrapper;
+    }
+
 }

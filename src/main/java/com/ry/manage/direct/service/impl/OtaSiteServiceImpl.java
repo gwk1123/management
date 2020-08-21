@@ -47,7 +47,9 @@ public class OtaSiteServiceImpl extends ServiceImpl<OtaSiteMapper, OtaSite> impl
     @Transactional(rollbackFor = Exception.class)
     public boolean removeOtaSite(String id){
         Assert.hasText(id, "主键为空");
-        return this.removeById(id);
+        OtaSite otaSite = this.getById(id);
+        otaSite.setStatus(DirectConstants.DELETE);
+        return this.updateById(otaSite);
     }
 
     @Override

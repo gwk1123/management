@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 
 /**
  * <p>
- * 航线路由信息(ml_route_config) 
+ * 航线路由信息(ml_route_config)
  * </p>
  *
  * @author liuyc
@@ -18,12 +18,12 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @ApiModel(value="RouteConfig对象", description="航线路由信息(ml_route_config) ")
-public class RouteConfig implements Serializable {
+public class RouteConfig extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "出发地多个逗号隔开")
-    private String deptCity;
+    private String depCity;
 
     @ApiModelProperty(value = "目的地多个逗号隔开")
     private String arrCity;
@@ -50,31 +50,12 @@ public class RouteConfig implements Serializable {
     private Integer sortSeq;
 
     @ApiModelProperty(value = "0-有效(正常),1-暂停(挂起) 99-无效(删除)")
-    private Boolean status;
+    private String status;
 
     @ApiModelProperty(value = "生效日期(开始)")
     private LocalDateTime startTime;
 
     @ApiModelProperty(value = "失效日期(截止)")
     private LocalDateTime endTime;
-
-    @ApiModelProperty(value = "创建时间")
-    private LocalDateTime createTime;
-
-    @ApiModelProperty(value = "最后修改时间")
-    private LocalDateTime updateTime;
-
-    @ApiModelProperty(value = "创建人ID")
-    private Integer createUserId;
-
-    @ApiModelProperty(value = "创建人名称")
-    private String createUserName;
-
-    @ApiModelProperty(value = "修改人ID")
-    private Integer updateUserId;
-
-    @ApiModelProperty(value = "修改人名称")
-    private String updateUserName;
-
 
 }
