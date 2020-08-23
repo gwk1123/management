@@ -49,6 +49,8 @@ public class DynamicSecurityMetadataSource implements FilterInvocationSecurityMe
             this.loadDataSource();
         }
         List<ConfigAttribute>  configAttributes = new ArrayList<>();
+        //configAttributes 返回null是不会校验权限，所以初始化一个ROLE的无用role_init
+        configAttributes.add(new org.springframework.security.access.SecurityConfig("role_init"));
         //获取当前访问的路径
         String url = ((FilterInvocation) o).getRequestUrl();
         String path = URLUtil.getPath(url);
