@@ -32,7 +32,7 @@ public class AutoMetaObjectHandler implements MetaObjectHandler {
         if(bol3){
             Object createTime = this.getFieldValByName("status",metaObject);
             if(createTime == null){
-                this.setFieldValByName("status",0,metaObject);
+                this.setFieldValByName("status","0",metaObject);
             }
         }
         boolean bol4 = metaObject.hasSetter("createUserName");

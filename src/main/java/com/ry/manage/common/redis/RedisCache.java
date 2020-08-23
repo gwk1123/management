@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * spring redis 工具类
- * 
+ *
  * @author ruoyi
  **/
 @SuppressWarnings(value = { "unchecked", "rawtypes" })
@@ -187,7 +187,7 @@ public class RedisCache
 
     /**
      * 获得缓存的基本对象列表
-     * 
+     *
      * @param pattern 字符串前缀
      * @return 对象列表
      */
@@ -220,6 +220,11 @@ public class RedisCache
     public <T> T  getCacheByKey(String key,String key_1){
         HashOperations hashOperations = redisTemplate.opsForHash();
         return (T) hashOperations.get(key,key_1);
+    }
+
+    public <T> T setCacheSetBykey(String key,T value){
+        redisTemplate.opsForSet().add(key,value);
+        return value;
     }
 
 }

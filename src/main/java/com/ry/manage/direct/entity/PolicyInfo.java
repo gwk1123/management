@@ -267,4 +267,7 @@ public class PolicyInfo extends BaseEntity implements Serializable {
     @TableField(exist = false)
     private String childBaggageWeight;
 
+
+
+
 }

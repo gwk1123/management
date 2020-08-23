@@ -17,7 +17,7 @@ public class BaseEntity {
      */
     @ApiModelProperty(value = "主键id")
     @TableId(value = "id",type = IdType.AUTO)
-    private String id;
+    private Long id;
     /**
      * 创建时间
      */
