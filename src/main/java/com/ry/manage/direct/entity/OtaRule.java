@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 
 /**
  * <p>
- * GDS规则信息(ml_gds_rule) 
+ * GDS规则信息
  * </p>
  *
  * @author liuyc
@@ -18,7 +18,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @ApiModel(value="OtaRule对象", description="GDS规则信息(ml_gds_rule) ")
-public class OtaRule implements Serializable {
+public class OtaRule extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -61,15 +61,6 @@ public class OtaRule implements Serializable {
     @ApiModelProperty(value = "自定义内容五")
     private String parameter5;
 
-    @ApiModelProperty(value = "自定义内容六")
-    private String parameter6;
-
-    @ApiModelProperty(value = "自定义内容七")
-    private String parameter7;
-
-    @ApiModelProperty(value = "自定义内容八")
-    private String parameter8;
-
     @ApiModelProperty(value = "版本控制")
     private Integer version;
 
@@ -79,32 +70,10 @@ public class OtaRule implements Serializable {
     @ApiModelProperty(value = "优先排序序号")
     private Integer sortSeq;
 
-    @ApiModelProperty(value = "0-有效(正常),1-暂停(挂起) 99-无效(删除)")
-    private Boolean status;
-
     @ApiModelProperty(value = "生效日期(开始)")
     private LocalDateTime startTime;
 
     @ApiModelProperty(value = "失效日期(截止)")
     private LocalDateTime endTime;
-
-    @ApiModelProperty(value = "创建时间")
-    private LocalDateTime createTime;
-
-    @ApiModelProperty(value = "最后修改时间")
-    private LocalDateTime updateTime;
-
-    @ApiModelProperty(value = "创建人ID")
-    private Integer createUserId;
-
-    @ApiModelProperty(value = "创建人名称")
-    private String createUserName;
-
-    @ApiModelProperty(value = "修改人ID")
-    private Integer updateUserId;
-
-    @ApiModelProperty(value = "修改人名称")
-    private String updateUserName;
-
 
 }
