@@ -8,7 +8,6 @@ import com.ry.manage.common.constant.DirectConstants;
 import com.ry.manage.direct.entity.PolicyInfo;
 import com.ry.manage.direct.entity.PolicyInfoBaggage;
 import com.ry.manage.direct.mapper.PolicyInfoMapper;
-import com.ry.manage.direct.redis.RedisCrudRepository;
 import com.ry.manage.direct.service.PolicyInfoBaggageService;
 import com.ry.manage.direct.service.PolicyInfoService;
 import org.springframework.stereotype.Service;
@@ -34,11 +33,8 @@ public class PolicyInfoServiceImpl extends ServiceImpl<PolicyInfoMapper, PolicyI
 
     private final PolicyInfoBaggageService policyInfoBaggageService;
 
-    private final RedisCrudRepository redisCrudRepository;
-
-    public PolicyInfoServiceImpl(PolicyInfoBaggageService policyInfoBaggageService, RedisCrudRepository redisCrudRepository) {
+    public PolicyInfoServiceImpl(PolicyInfoBaggageService policyInfoBaggageService) {
         this.policyInfoBaggageService = policyInfoBaggageService;
-        this.redisCrudRepository = redisCrudRepository;
     }
 
     @Override
@@ -72,7 +68,7 @@ public class PolicyInfoServiceImpl extends ServiceImpl<PolicyInfoMapper, PolicyI
             policyInfoBaggages.add(childPolicyInfoBaggage);
             policyInfoBaggageService.saveBatch(policyInfoBaggages);
         }
-        redisCrudRepository.saveOrUpdate(policyInfo);
+//        redisCrudRepository.saveOrUpdate(policyInfo);
         return true;
     }
 
@@ -123,7 +119,7 @@ public class PolicyInfoServiceImpl extends ServiceImpl<PolicyInfoMapper, PolicyI
             childPolicyInfoBaggage.setBaggageWeight(policyInfo.getChildBaggageWeight());
             policyInfoBaggageService.saveOrUpdate(childPolicyInfoBaggage, childQueryWrapper);
         }
-        redisCrudRepository.saveOrUpdate(policyInfo);
+//        redisCrudRepository.saveOrUpdate(policyInfo);
         return this.updateById(policyInfo);
     }
 

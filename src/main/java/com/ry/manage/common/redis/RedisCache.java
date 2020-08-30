@@ -16,8 +16,11 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class RedisCache
 {
-    @Autowired
-    public RedisTemplate redisTemplate;
+    public final RedisTemplate redisTemplate;
+
+    public RedisCache(RedisTemplate redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
 
     /**
      * 缓存基本的对象，Integer、String、实体类等
@@ -204,7 +207,7 @@ public class RedisCache
      * @param <T>
      * @return
      */
-    public <T> HashOperations<String,String, T>  setCacheByKey(String key,String key_1,T value){
+    public <T> HashOperations<String,String, T>  saveCacheHashByKey(String key,String key_1,T value){
         HashOperations hashOperations = redisTemplate.opsForHash();
         hashOperations.put(key,key_1,value);
         return hashOperations;
@@ -217,12 +220,21 @@ public class RedisCache
      * @param <T>
      * @return
      */
-    public <T> T  getCacheByKey(String key,String key_1){
-        HashOperations hashOperations = redisTemplate.opsForHash();
-        return (T) hashOperations.get(key,key_1);
+    public <T> T  getCacheHashByKey(String key,String key_1){
+        return (T)  redisTemplate.opsForHash().get(key,key_1);
     }
 
-    public <T> T setCacheSetBykey(String key,T value){
+    public void  deleteCacheHashByKey(String key,Object... key_1){
+        redisTemplate.opsForHash().delete(key,key_1);
+    }
+
+
+    public <T> T saveCacheSetBykey(String key,T value){
+        redisTemplate.opsForSet().add(key,value);
+        return value;
+    }
+
+    public <T> T deleteCacheSetBykey(String key,T value){
         redisTemplate.opsForSet().add(key,value);
         return value;
     }

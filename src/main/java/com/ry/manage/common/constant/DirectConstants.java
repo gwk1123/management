@@ -28,4 +28,9 @@ public class DirectConstants {
      */
     public static final String  TRIP_TYPE_ALL = "0";
 
+    /**
+     * 政策航司为空表示所有
+     */
+    public static final String POLICY_AIRLINE_ALL = "ALL";
+
 }
