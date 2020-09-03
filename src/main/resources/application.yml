@@ -24,6 +24,19 @@ mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #开启sql日志
 
+xxl:
+  job:
+    admin:
+      addresses: http://8.129.213.16:8084/xxl-job-admin/
+    accessToken=:
+    executor:
+      appname: xxl-job-management
+      address:
+      ip:
+      port: 8085
+      logretentiondays: 30
+      logpath: /applogs/xxl-job/jobhandler
+
 jwt:
   tokenHeader: Authorization
   secret: abcdefghijklmnopqrstuvwxyz
