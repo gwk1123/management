@@ -12,28 +12,28 @@ public class XxlJobConfig {
 
     private Logger logger = LoggerFactory.getLogger(XxlJobConfig.class);
 
-    @Value("${xxl:job:admin:addresses}")
+    @Value("${xxl.job.admin.addresses}")
     private String adminAddresses;
 
-    @Value("${xxl:job:accessToken}")
+    @Value("${xxl.job.accessToken}")
     private String accessToken;
 
-    @Value("${xxl:job.executor:appname}")
+    @Value("${xxl.job.executor.appname}")
     private String appname;
 
-    @Value("${xxl:job:executor:address}")
+    @Value("${xxl.job.executor.address}")
     private String address;
 
-    @Value("${xxl:job:executor:ip}")
+    @Value("${xxl.job.executor.ip}")
     private String ip;
 
-    @Value("${xxl:job:executor:port}")
+    @Value("${xxl.job.executor.port}")
     private String port;
 
-    @Value("${xxl:job:executor:logpath}")
+    @Value("${xxl.job.executor.logpath}")
     private String logPath;
 
-    @Value("${xxl:job:executor:logretentiondays}")
+    @Value("${xxl.job.executor.logretentiondays}")
     private String logRetentionDays;
 
 
