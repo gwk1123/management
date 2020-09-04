@@ -33,7 +33,7 @@ xxl:
       appname: xxl-job-management
       address:
       ip:
-      port: 8085
+      port: 10001
       logretentiondays: 30
       logpath: /applogs/xxl-job/jobhandler
 
