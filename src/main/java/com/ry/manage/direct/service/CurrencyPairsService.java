@@ -3,7 +3,7 @@ package com.ry.manage.direct.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.ry.manage.direct.entity.CurrencyPairs;
+import comm.repository.entity.CurrencyPairs;
 
 import java.util.List;
 

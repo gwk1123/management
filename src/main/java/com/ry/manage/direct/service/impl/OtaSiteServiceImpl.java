@@ -4,11 +4,10 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.ry.manage.common.constant.DirectConstants;
-import com.ry.manage.direct.entity.GdsPcc;
-import com.ry.manage.direct.entity.OtaSite;
-import com.ry.manage.direct.mapper.OtaSiteMapper;
 import com.ry.manage.direct.service.OtaSiteService;
+import comm.repository.entity.OtaSite;
+import comm.repository.mapper.OtaSiteMapper;
+import comm.utils.constant.DirectConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
@@ -30,7 +29,7 @@ import org.springframework.util.CollectionUtils;
 public class OtaSiteServiceImpl extends ServiceImpl<OtaSiteMapper, OtaSite> implements OtaSiteService {
 
     @Override
-    public  IPage<OtaSite> pageOtaSite(Page<OtaSite> page,OtaSite otaSite){
+    public  IPage<OtaSite> pageOtaSite(Page<OtaSite> page, OtaSite otaSite){
         page = Optional.ofNullable(page).orElse(new Page<>());
         QueryWrapper<OtaSite> queryWrapper = this.buildQueryWrapper(otaSite);
         return  this.page(page, queryWrapper);

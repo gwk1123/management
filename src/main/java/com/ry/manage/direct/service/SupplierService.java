@@ -3,7 +3,7 @@ package com.ry.manage.direct.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.ry.manage.direct.entity.Supplier;
+import comm.repository.entity.Supplier;
 
 import java.util.List;
 
@@ -27,15 +27,15 @@ public interface SupplierService extends IService<Supplier> {
      IPage<Supplier> pageSupplier(Page<Supplier> page,Supplier supplier);
 
     /**
-     * 新增供应商信息(ml_supplier) 
+     * 新增供应商信息(ml_supplier)
      *
-     * @param supplier 供应商信息(ml_supplier) 
+     * @param supplier 供应商信息(ml_supplier)
      * @return boolean
      */
     boolean saveSupplier(Supplier supplier);
 
     /**
-     * 删除供应商信息(ml_supplier) 
+     * 删除供应商信息(ml_supplier)
      *
      * @param id 主键
      * @return boolean
@@ -43,7 +43,7 @@ public interface SupplierService extends IService<Supplier> {
     boolean removeSupplier(String id);
 
     /**
-     * 批量删除供应商信息(ml_supplier) 
+     * 批量删除供应商信息(ml_supplier)
      *
      * @param ids 主键集合
      * @return boolean
@@ -51,9 +51,9 @@ public interface SupplierService extends IService<Supplier> {
     boolean removeSupplierByIds(List<String> ids);
 
     /**
-     * 修改供应商信息(ml_supplier) 
+     * 修改供应商信息(ml_supplier)
      *
-     * @param supplier 供应商信息(ml_supplier) 
+     * @param supplier 供应商信息(ml_supplier)
      * @return boolean
      */
     boolean updateSupplier(Supplier supplier);

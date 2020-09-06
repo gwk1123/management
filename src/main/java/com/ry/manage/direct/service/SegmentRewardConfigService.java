@@ -3,7 +3,7 @@ package com.ry.manage.direct.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.ry.manage.direct.entity.SegmentRewardConfig;
+import comm.repository.entity.SegmentRewardConfig;
 
 import java.util.List;
 
@@ -27,15 +27,15 @@ public interface SegmentRewardConfigService extends IService<SegmentRewardConfig
      IPage<SegmentRewardConfig> pageSegmentRewardConfig(Page<SegmentRewardConfig> page,SegmentRewardConfig segmentRewardConfig);
 
     /**
-     * 新增航段奖励(ml_segment_reward_config) 
+     * 新增航段奖励(ml_segment_reward_config)
      *
-     * @param segmentRewardConfig 航段奖励(ml_segment_reward_config) 
+     * @param segmentRewardConfig 航段奖励(ml_segment_reward_config)
      * @return boolean
      */
     boolean saveSegmentRewardConfig(SegmentRewardConfig segmentRewardConfig);
 
     /**
-     * 删除航段奖励(ml_segment_reward_config) 
+     * 删除航段奖励(ml_segment_reward_config)
      *
      * @param id 主键
      * @return boolean
@@ -43,7 +43,7 @@ public interface SegmentRewardConfigService extends IService<SegmentRewardConfig
     boolean removeSegmentRewardConfig(String id);
 
     /**
-     * 批量删除航段奖励(ml_segment_reward_config) 
+     * 批量删除航段奖励(ml_segment_reward_config)
      *
      * @param ids 主键集合
      * @return boolean
@@ -51,9 +51,9 @@ public interface SegmentRewardConfigService extends IService<SegmentRewardConfig
     boolean removeSegmentRewardConfigByIds(List<String> ids);
 
     /**
-     * 修改航段奖励(ml_segment_reward_config) 
+     * 修改航段奖励(ml_segment_reward_config)
      *
-     * @param segmentRewardConfig 航段奖励(ml_segment_reward_config) 
+     * @param segmentRewardConfig 航段奖励(ml_segment_reward_config)
      * @return boolean
      */
     boolean updateSegmentRewardConfig(SegmentRewardConfig segmentRewardConfig);

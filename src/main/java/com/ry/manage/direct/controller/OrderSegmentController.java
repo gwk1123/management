@@ -1,7 +1,7 @@
 package com.ry.manage.direct.controller;
 
-import com.ry.manage.direct.entity.OrderSegment;
 import com.ry.manage.direct.service.OrderSegmentService;
+import comm.repository.entity.OrderSegment;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import org.springframework.web.bind.annotation.*;

@@ -1,7 +1,7 @@
 package com.ry.manage.direct.controller;
 
-import com.ry.manage.direct.entity.QueueLetterBox;
 import com.ry.manage.direct.service.QueueLetterBoxService;
+import comm.repository.entity.QueueLetterBox;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import org.springframework.web.bind.annotation.*;

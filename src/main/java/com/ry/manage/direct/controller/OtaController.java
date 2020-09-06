@@ -1,10 +1,8 @@
 package com.ry.manage.direct.controller;
 
 import com.ry.manage.common.CommonResult;
-import com.ry.manage.direct.entity.Gds;
-import com.ry.manage.direct.entity.GdsPcc;
-import com.ry.manage.direct.entity.Ota;
 import com.ry.manage.direct.service.OtaService;
+import comm.repository.entity.Ota;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import org.springframework.web.bind.annotation.*;

@@ -4,9 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.ry.manage.direct.service.PolicyGlobalService;
-import comm.repository.entity.PolicyGlobal;
-import comm.repository.mapper.PolicyGlobalMapper;
+import com.ry.manage.direct.service.SiteRulesSwitchService;
+import comm.repository.entity.SiteRulesSwitch;
+import comm.repository.mapper.SiteRulesSwitchMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -18,61 +18,54 @@ import java.util.Optional;
 
 /**
  * <p>
- *  服务实现类
+ * 站点规则开关 服务实现类
  * </p>
  *
  * @author gwk
- * @since 2020-08-23
+ * @since 2020-09-05
  */
 @Service
-public class PolicyGlobalServiceImpl extends ServiceImpl<PolicyGlobalMapper, PolicyGlobal> implements PolicyGlobalService {
+public class SiteRulesSwitchServiceImpl extends ServiceImpl<SiteRulesSwitchMapper, SiteRulesSwitch> implements SiteRulesSwitchService {
 
     @Override
-    public  IPage<PolicyGlobal> pagePolicyGlobal(Page<PolicyGlobal> page,PolicyGlobal policyGlobal){
+    public  IPage<SiteRulesSwitch> pageSiteRulesSwitch(Page<SiteRulesSwitch> page, SiteRulesSwitch siteRulesSwitch){
 
         page = Optional.ofNullable(page).orElse(new Page<>());
-        QueryWrapper<PolicyGlobal> queryWrapper = new QueryWrapper<>();
+        QueryWrapper<SiteRulesSwitch> queryWrapper = new QueryWrapper<>();
 
         return  this.page(page, queryWrapper);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean savePolicyGlobal(PolicyGlobal policyGlobal){
-        Assert.notNull(policyGlobal, "为空");
-        return this.save(policyGlobal);
+    public boolean saveSiteRulesSwitch(SiteRulesSwitch siteRulesSwitch){
+        Assert.notNull(siteRulesSwitch, "站点规则开关为空");
+        return this.save(siteRulesSwitch);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean removePolicyGlobal(String id){
+    public boolean removeSiteRulesSwitch(String id){
         Assert.hasText(id, "主键为空");
         return this.removeById(id);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean removePolicyGlobalByIds(List<String> ids){
+    public boolean removeSiteRulesSwitchByIds(List<String> ids){
         Assert.isTrue(!CollectionUtils.isEmpty(ids), "主键集合为空");
         return this.removeByIds(ids);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean updatePolicyGlobal(PolicyGlobal policyGlobal){
-        Assert.notNull(policyGlobal, "为空");
-        return this.updateById(policyGlobal);
+    public boolean updateSiteRulesSwitch(SiteRulesSwitch siteRulesSwitch){
+        Assert.notNull(siteRulesSwitch, "站点规则开关为空");
+        return this.updateById(siteRulesSwitch);
     }
 
     @Override
-    public PolicyGlobal getPolicyGlobalById(String id){
+    public SiteRulesSwitch getSiteRulesSwitchById(String id){
         return  this.getById(id);
-    }
-
-    @Override
-    public boolean changePolicyGlobalStatus(PolicyGlobal policyGlobal) {
-        PolicyGlobal status = this.getById(policyGlobal.getId());
-        status.setStatus(policyGlobal.getStatus());
-        return this.updateById(status);
     }
 }

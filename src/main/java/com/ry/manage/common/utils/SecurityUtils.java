@@ -1,15 +1,15 @@
 package com.ry.manage.common.utils;
 
-import com.ry.manage.common.exception.CustomException;
 import com.ry.manage.sys.auth.bo.AdminUserDetails;
 import com.ry.manage.sys.entity.SysUser;
+import comm.utils.exception.CustomException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /**
  * 安全服务工具类
- * 
+ *
  * @author ruoyi
  */
 public class SecurityUtils
@@ -87,7 +87,7 @@ public class SecurityUtils
 
     /**
      * 是否为管理员
-     * 
+     *
      * @param userId 用户ID
      * @return 结果
      */

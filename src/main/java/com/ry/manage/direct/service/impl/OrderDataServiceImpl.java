@@ -4,9 +4,9 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.ry.manage.direct.entity.OrderData;
-import com.ry.manage.direct.mapper.OrderDataMapper;
 import com.ry.manage.direct.service.OrderDataService;
+import comm.repository.entity.OrderData;
+import comm.repository.mapper.OrderDataMapper;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -27,7 +27,7 @@ import org.springframework.util.CollectionUtils;
 public class OrderDataServiceImpl extends ServiceImpl<OrderDataMapper, OrderData> implements OrderDataService {
 
     @Override
-    public  IPage<OrderData> pageOrderData(Page<OrderData> page,OrderData orderData){
+    public  IPage<OrderData> pageOrderData(Page<OrderData> page, OrderData orderData){
 
         page = Optional.ofNullable(page).orElse(new Page<>());
         QueryWrapper<OrderData> queryWrapper = new QueryWrapper<>();

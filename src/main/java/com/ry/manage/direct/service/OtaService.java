@@ -2,8 +2,8 @@ package com.ry.manage.direct.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.ry.manage.direct.entity.Gds;
-import com.ry.manage.direct.entity.Ota;
+import comm.repository.entity.Ota;
+
 
 import java.util.List;
 

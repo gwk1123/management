@@ -3,7 +3,7 @@ package com.ry.manage.direct.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.ry.manage.direct.entity.OtaRule;
+import comm.repository.entity.OtaRule;
 
 import java.util.List;
 
@@ -27,15 +27,15 @@ public interface OtaRuleService extends IService<OtaRule> {
      IPage<OtaRule> pageOtaRule(Page<OtaRule> page,OtaRule otaRule);
 
     /**
-     * 新增GDS规则信息(ml_gds_rule) 
+     * 新增GDS规则信息(ml_gds_rule)
      *
-     * @param otaRule GDS规则信息(ml_gds_rule) 
+     * @param otaRule GDS规则信息(ml_gds_rule)
      * @return boolean
      */
     boolean saveOtaRule(OtaRule otaRule);
 
     /**
-     * 删除GDS规则信息(ml_gds_rule) 
+     * 删除GDS规则信息(ml_gds_rule)
      *
      * @param id 主键
      * @return boolean
@@ -43,7 +43,7 @@ public interface OtaRuleService extends IService<OtaRule> {
     boolean removeOtaRule(String id);
 
     /**
-     * 批量删除GDS规则信息(ml_gds_rule) 
+     * 批量删除GDS规则信息(ml_gds_rule)
      *
      * @param ids 主键集合
      * @return boolean
@@ -51,9 +51,9 @@ public interface OtaRuleService extends IService<OtaRule> {
     boolean removeOtaRuleByIds(List<String> ids);
 
     /**
-     * 修改GDS规则信息(ml_gds_rule) 
+     * 修改GDS规则信息(ml_gds_rule)
      *
-     * @param otaRule GDS规则信息(ml_gds_rule) 
+     * @param otaRule GDS规则信息(ml_gds_rule)
      * @return boolean
      */
     boolean updateOtaRule(OtaRule otaRule);

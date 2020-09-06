@@ -5,8 +5,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+
+
 @SpringBootApplication
-@MapperScan({"com.ry.manage.sys.mapper","com.ry.manage.direct.mapper"})
+@MapperScan({"com.ry.manage.sys.mapper","comm.repository.mapper"})
 public class ManageApplication {
 
     public static void main(String[] args) {

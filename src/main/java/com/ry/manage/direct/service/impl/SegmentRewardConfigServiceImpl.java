@@ -4,9 +4,9 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.ry.manage.direct.entity.SegmentRewardConfig;
-import com.ry.manage.direct.mapper.SegmentRewardConfigMapper;
 import com.ry.manage.direct.service.SegmentRewardConfigService;
+import comm.repository.entity.SegmentRewardConfig;
+import comm.repository.mapper.SegmentRewardConfigMapper;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -27,7 +27,7 @@ import org.springframework.util.CollectionUtils;
 public class SegmentRewardConfigServiceImpl extends ServiceImpl<SegmentRewardConfigMapper, SegmentRewardConfig> implements SegmentRewardConfigService {
 
     @Override
-    public  IPage<SegmentRewardConfig> pageSegmentRewardConfig(Page<SegmentRewardConfig> page,SegmentRewardConfig segmentRewardConfig){
+    public  IPage<SegmentRewardConfig> pageSegmentRewardConfig(Page<SegmentRewardConfig> page, SegmentRewardConfig segmentRewardConfig){
 
         page = Optional.ofNullable(page).orElse(new Page<>());
         QueryWrapper<SegmentRewardConfig> queryWrapper = new QueryWrapper<>();

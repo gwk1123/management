@@ -4,9 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.ry.manage.direct.entity.PolicyInfoBaggage;
-import com.ry.manage.direct.mapper.PolicyInfoBaggageMapper;
 import com.ry.manage.direct.service.PolicyInfoBaggageService;
+import comm.repository.entity.PolicyInfoBaggage;
+import comm.repository.mapper.PolicyInfoBaggageMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -28,7 +28,7 @@ import java.util.Optional;
 public class PolicyInfoBaggageServiceImpl extends ServiceImpl<PolicyInfoBaggageMapper, PolicyInfoBaggage> implements PolicyInfoBaggageService {
 
     @Override
-    public  IPage<PolicyInfoBaggage> pagePolicyInfoBaggage(Page<PolicyInfoBaggage> page,PolicyInfoBaggage policyInfoBaggage){
+    public  IPage<PolicyInfoBaggage> pagePolicyInfoBaggage(Page<PolicyInfoBaggage> page, PolicyInfoBaggage policyInfoBaggage){
 
         page = Optional.ofNullable(page).orElse(new Page<>());
         QueryWrapper<PolicyInfoBaggage> queryWrapper = new QueryWrapper<>();
