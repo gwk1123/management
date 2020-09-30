@@ -22,7 +22,7 @@ import java.util.List;
  */
 @Api(tags = {"站点规则开关"})
 @RestController
-@RequestMapping("/model/site-rules-switch")
+@RequestMapping("/model/site_rules_switch")
 public class SiteRulesSwitchController {
 
     private final SiteRulesSwitchService iteRulesSwitchService;

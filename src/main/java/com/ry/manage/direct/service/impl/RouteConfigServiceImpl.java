@@ -80,8 +80,8 @@ public class RouteConfigServiceImpl extends ServiceImpl<RouteConfigMapper, Route
     public QueryWrapper<RouteConfig> buildQueryWrapper(RouteConfig routeConfig){
         QueryWrapper<RouteConfig> routeConfigQueryWrapper=new QueryWrapper<>();
         if(routeConfig != null){
-            routeConfigQueryWrapper.lambda().like(StringUtils.isNotBlank(routeConfig.getDepCity()), RouteConfig::getDepCity,routeConfig.getDepCity())
-                    .like(StringUtils.isNotBlank(routeConfig.getArrCity()),RouteConfig::getArrCity,routeConfig.getArrCity());
+            routeConfigQueryWrapper.lambda().like(StringUtils.isNotBlank(routeConfig.getOrigin()), RouteConfig::getOrigin,routeConfig.getOrigin())
+                    .like(StringUtils.isNotBlank(routeConfig.getDestination()),RouteConfig::getDestination,routeConfig.getDestination());
         }
         if(routeConfig != null && StringUtils.isNotBlank(routeConfig.getStatus())){
             routeConfigQueryWrapper.lambda().eq(StringUtils.isNotBlank(routeConfig.getStatus()),RouteConfig::getStatus,routeConfig.getStatus());
