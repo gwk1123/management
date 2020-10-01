@@ -5,8 +5,11 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ry.manage.direct.service.SiteRulesSwitchService;
+import comm.repository.entity.GdsPcc;
 import comm.repository.entity.SiteRulesSwitch;
 import comm.repository.mapper.SiteRulesSwitchMapper;
+import comm.utils.constant.DirectConstants;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -31,8 +34,7 @@ public class SiteRulesSwitchServiceImpl extends ServiceImpl<SiteRulesSwitchMappe
     public  IPage<SiteRulesSwitch> pageSiteRulesSwitch(Page<SiteRulesSwitch> page, SiteRulesSwitch siteRulesSwitch){
 
         page = Optional.ofNullable(page).orElse(new Page<>());
-        QueryWrapper<SiteRulesSwitch> queryWrapper = new QueryWrapper<>();
-
+        QueryWrapper<SiteRulesSwitch> queryWrapper = this.buildQueryWrapper(siteRulesSwitch);
         return  this.page(page, queryWrapper);
     }
 
@@ -67,5 +69,21 @@ public class SiteRulesSwitchServiceImpl extends ServiceImpl<SiteRulesSwitchMappe
     @Override
     public SiteRulesSwitch getSiteRulesSwitchById(String id){
         return  this.getById(id);
+    }
+
+
+    public QueryWrapper<SiteRulesSwitch> buildQueryWrapper(SiteRulesSwitch siteRulesSwitch){
+        QueryWrapper<SiteRulesSwitch> gdsQueryWrapper=new QueryWrapper<>();
+        if(siteRulesSwitch != null){
+            gdsQueryWrapper.lambda().like(StringUtils.isNotBlank(siteRulesSwitch.getGroupKey()),SiteRulesSwitch::getGroupKey,siteRulesSwitch.getGroupKey())
+                    .like(StringUtils.isNotBlank(siteRulesSwitch.getParameterKey()),SiteRulesSwitch::getParameterKey,siteRulesSwitch.getParameterKey());
+        }
+        if(siteRulesSwitch != null && StringUtils.isNotBlank(siteRulesSwitch.getStatus())){
+            gdsQueryWrapper.lambda().eq(StringUtils.isNotBlank(siteRulesSwitch.getStatus()),SiteRulesSwitch::getStatus,siteRulesSwitch.getStatus());
+        }else {
+            gdsQueryWrapper.and(wrapper -> wrapper.lambda().eq(SiteRulesSwitch::getStatus, DirectConstants.NORMAL).or().eq(SiteRulesSwitch::getStatus,DirectConstants.FAILURE));
+        }
+        gdsQueryWrapper.lambda().orderByAsc(SiteRulesSwitch::getCreateTime);
+        return gdsQueryWrapper;
     }
 }
