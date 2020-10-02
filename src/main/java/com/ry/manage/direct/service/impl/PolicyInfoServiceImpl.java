@@ -10,6 +10,8 @@ import comm.repository.entity.PolicyInfo;
 import comm.repository.entity.PolicyInfoBaggage;
 import comm.repository.mapper.PolicyInfoMapper;
 import comm.utils.constant.DirectConstants;
+import comm.utils.redis.impl.PolicyInfoRepositoryImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -31,10 +33,12 @@ import java.util.Optional;
 @Service
 public class PolicyInfoServiceImpl extends ServiceImpl<PolicyInfoMapper, PolicyInfo> implements PolicyInfoService {
 
+    private final PolicyInfoRepositoryImpl policyInfoRepository;
     private final PolicyInfoBaggageService policyInfoBaggageService;
 
-    public PolicyInfoServiceImpl(PolicyInfoBaggageService policyInfoBaggageService) {
+    public PolicyInfoServiceImpl(PolicyInfoBaggageService policyInfoBaggageService, PolicyInfoRepositoryImpl policyInfoRepository) {
         this.policyInfoBaggageService = policyInfoBaggageService;
+        this.policyInfoRepository = policyInfoRepository;
     }
 
     @Override
@@ -67,8 +71,13 @@ public class PolicyInfoServiceImpl extends ServiceImpl<PolicyInfoMapper, PolicyI
             childPolicyInfoBaggage.setBaggageWeight(policyInfo.getChildBaggageWeight());
             policyInfoBaggages.add(childPolicyInfoBaggage);
             policyInfoBaggageService.saveBatch(policyInfoBaggages);
+            policyInfo.setPolicyInfoBaggages(policyInfoBaggages);
         }
-//        redisCrudRepository.saveOrUpdate(policyInfo);
+        if(DirectConstants.NORMAL.equals(policyInfo.getStatus())){
+            policyInfoRepository.saveOrUpdate(policyInfo);
+        }else {
+            policyInfoRepository.delete(policyInfo);
+        }
         return true;
     }
 
@@ -78,14 +87,19 @@ public class PolicyInfoServiceImpl extends ServiceImpl<PolicyInfoMapper, PolicyI
         Assert.hasText(id, "主键为空");
         PolicyInfo policyInfo = this.getById(id);
         policyInfo.setStatus(DirectConstants.DELETE);
-        return this.updateById(policyInfo);
+        this.updateById(policyInfo);
+        policyInfoRepository.delete(policyInfo);
+        return true;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean removePolicyInfoByIds(List<String> ids) {
         Assert.isTrue(!CollectionUtils.isEmpty(ids), "主键集合为空");
-        return this.removeByIds(ids);
+        ids.stream().forEach(e ->{
+            removePolicyInfo(e);
+        });
+        return true;
     }
 
     @Override
@@ -93,6 +107,7 @@ public class PolicyInfoServiceImpl extends ServiceImpl<PolicyInfoMapper, PolicyI
     public boolean updatePolicyInfo(PolicyInfo policyInfo) {
         Assert.notNull(policyInfo, "为空");
         if (policyInfo.getBaggageType() == 1) {
+            List<PolicyInfoBaggage> policyInfoBaggages = new ArrayList<>();
             QueryWrapper<PolicyInfoBaggage> baggageQueryWrapper = new QueryWrapper<>();
             baggageQueryWrapper.lambda().eq(PolicyInfoBaggage::getPolicyId, policyInfo.getId())
                     .eq(PolicyInfoBaggage::getPassengerType, "0");
@@ -105,6 +120,7 @@ public class PolicyInfoServiceImpl extends ServiceImpl<PolicyInfoMapper, PolicyI
             adultPolicyInfoBaggage.setBaggagePieces(policyInfo.getAdultBaggagePieces());
             adultPolicyInfoBaggage.setBaggageWeight(policyInfo.getAdultBaggageWeight());
             policyInfoBaggageService.saveOrUpdate(adultPolicyInfoBaggage, baggageQueryWrapper);
+            policyInfoBaggages.add(adultPolicyInfoBaggage);
 
             QueryWrapper<PolicyInfoBaggage> childQueryWrapper = new QueryWrapper<>();
             childQueryWrapper.lambda().eq(PolicyInfoBaggage::getPolicyId, policyInfo.getId())
@@ -118,9 +134,16 @@ public class PolicyInfoServiceImpl extends ServiceImpl<PolicyInfoMapper, PolicyI
             childPolicyInfoBaggage.setBaggagePieces(policyInfo.getChildBaggagePieces());
             childPolicyInfoBaggage.setBaggageWeight(policyInfo.getChildBaggageWeight());
             policyInfoBaggageService.saveOrUpdate(childPolicyInfoBaggage, childQueryWrapper);
+            policyInfoBaggages.add(childPolicyInfoBaggage);
+            policyInfo.setPolicyInfoBaggages(policyInfoBaggages);
         }
-//        redisCrudRepository.saveOrUpdate(policyInfo);
-        return this.updateById(policyInfo);
+        this.updateById(policyInfo);
+        if(DirectConstants.NORMAL.equals(policyInfo.getStatus())){
+            policyInfoRepository.saveOrUpdate(policyInfo);
+        }else {
+            policyInfoRepository.delete(policyInfo);
+        }
+        return true;
     }
 
     @Override
@@ -132,6 +155,19 @@ public class PolicyInfoServiceImpl extends ServiceImpl<PolicyInfoMapper, PolicyI
     public boolean changePolicyInfoStatus(PolicyInfo policyInfo) {
         PolicyInfo status = this.getById(policyInfo.getId());
         status.setStatus(policyInfo.getStatus());
-        return this.updateById(status);
+        this.updateById(status);
+        List<PolicyInfoBaggage> policyInfoBaggages = null;
+        if (policyInfo.getBaggageType() == 1) {
+            QueryWrapper<PolicyInfoBaggage> policyInfoBaggageQueryWrapper = new QueryWrapper<>();
+            policyInfoBaggageQueryWrapper.lambda().eq(PolicyInfoBaggage::getPolicyId, policyInfo.getId());
+            policyInfoBaggages =policyInfoBaggageService.list(policyInfoBaggageQueryWrapper);
+            status.setPolicyInfoBaggages(policyInfoBaggages);
+        }
+        if(DirectConstants.NORMAL.equals(status.getStatus())){
+            policyInfoRepository.saveOrUpdate(status);
+        }else {
+            policyInfoRepository.delete(status);
+        }
+        return true;
     }
 }

@@ -8,7 +8,9 @@ import com.ry.manage.direct.service.OtaService;
 import comm.repository.entity.Ota;
 import comm.repository.mapper.OtaMapper;
 import comm.utils.constant.DirectConstants;
+import comm.utils.redis.impl.OtaRepositoryImpl;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -28,6 +30,9 @@ import org.springframework.util.CollectionUtils;
 @Service
 public class OtaServiceImpl extends ServiceImpl<OtaMapper, Ota> implements OtaService {
 
+    @Autowired
+    private OtaRepositoryImpl otaRepository;
+
     @Override
     public  IPage<Ota> pageOta(Page<Ota> page,Ota ota){
         page = Optional.ofNullable(page).orElse(new Page<>());
@@ -39,7 +44,13 @@ public class OtaServiceImpl extends ServiceImpl<OtaMapper, Ota> implements OtaSe
     @Transactional(rollbackFor = Exception.class)
     public boolean saveOta(Ota ota){
         Assert.notNull(ota, "OTA平台信息为空");
-        return this.save(ota);
+        this.save(ota);
+        if(DirectConstants.NORMAL.equals(ota.getStatus())){
+            otaRepository.saveOrUpdateCache(ota);
+        }else {
+            otaRepository.delete(ota);
+        }
+        return true;
     }
 
     @Override
@@ -48,21 +59,32 @@ public class OtaServiceImpl extends ServiceImpl<OtaMapper, Ota> implements OtaSe
         Assert.hasText(id, "主键为空");
         Ota ota = this.getById(id);
         ota.setStatus(DirectConstants.DELETE);
-        return this.updateById(ota);
+        this.updateById(ota);
+        otaRepository.delete(ota);
+        return true;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean removeOtaByIds(List<String> ids){
         Assert.isTrue(!CollectionUtils.isEmpty(ids), "主键集合为空");
-        return this.removeByIds(ids);
+        ids.stream().forEach( e->{
+            removeOta(e);
+        });
+        return true;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean updateOta(Ota ota){
         Assert.notNull(ota, "OTA平台信息为空");
-        return this.updateById(ota);
+        this.updateById(ota);
+        if(DirectConstants.NORMAL.equals(ota.getStatus())){
+            otaRepository.saveOrUpdateCache(ota);
+        }else {
+            otaRepository.delete(ota);
+        }
+        return true;
     }
 
     @Override
@@ -74,7 +96,13 @@ public class OtaServiceImpl extends ServiceImpl<OtaMapper, Ota> implements OtaSe
     public boolean changeOtaStatus(Ota ota){
         Ota status = this.getById(ota.getId());
         status.setStatus(ota.getStatus());
-        return this.updateById(status);
+        this.updateById(status);
+        if(DirectConstants.NORMAL.equals(status.getStatus())){
+            otaRepository.saveOrUpdateCache(ota);
+        }else {
+            otaRepository.delete(ota);
+        }
+        return true;
     }
 
 

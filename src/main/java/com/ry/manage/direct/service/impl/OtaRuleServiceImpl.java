@@ -7,6 +7,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ry.manage.direct.service.OtaRuleService;
 import comm.repository.entity.OtaRule;
 import comm.repository.mapper.OtaRuleMapper;
+import comm.utils.constant.DirectConstants;
+import comm.utils.redis.impl.OtaRuleRepositoryImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -26,6 +29,9 @@ import org.springframework.util.CollectionUtils;
 @Service
 public class OtaRuleServiceImpl extends ServiceImpl<OtaRuleMapper, OtaRule> implements OtaRuleService {
 
+    @Autowired
+    private OtaRuleRepositoryImpl otaRuleRepository;
+
     @Override
     public  IPage<OtaRule> pageOtaRule(Page<OtaRule> page,OtaRule otaRule){
 
@@ -38,29 +44,47 @@ public class OtaRuleServiceImpl extends ServiceImpl<OtaRuleMapper, OtaRule> impl
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean saveOtaRule(OtaRule otaRule){
-        Assert.notNull(otaRule, "GDS规则信息(ml_gds_rule) 为空");
-        return this.save(otaRule);
+        Assert.notNull(otaRule, "otaRule为空");
+        this.save(otaRule);
+        if(DirectConstants.NORMAL.equals(otaRule.getStatus())){
+            otaRuleRepository.saveOrUpdateCache(otaRule);
+        }else {
+            otaRuleRepository.delete(otaRule);
+        }
+        return true;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean removeOtaRule(String id){
         Assert.hasText(id, "主键为空");
-        return this.removeById(id);
+        OtaRule otaRule =this.getById(id);
+        otaRule.setStatus(DirectConstants.DELETE);
+        otaRuleRepository.delete(otaRule);
+        return true;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean removeOtaRuleByIds(List<String> ids){
         Assert.isTrue(!CollectionUtils.isEmpty(ids), "主键集合为空");
-        return this.removeByIds(ids);
+        ids.stream().forEach(e ->{
+            removeOtaRule(e);
+        });
+        return true;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean updateOtaRule(OtaRule otaRule){
         Assert.notNull(otaRule, "GDS规则信息(ml_gds_rule) 为空");
-        return this.updateById(otaRule);
+        this.updateById(otaRule);
+        if(DirectConstants.NORMAL.equals(otaRule.getStatus())){
+            otaRuleRepository.saveOrUpdateCache(otaRule);
+        }else {
+            otaRuleRepository.delete(otaRule);
+        }
+        return true;
     }
 
     @Override

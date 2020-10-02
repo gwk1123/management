@@ -7,7 +7,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ry.manage.direct.service.AllAirportsService;
 import comm.repository.entity.AllAirports;
 import comm.repository.mapper.AllAirportsMapper;
+import comm.utils.constant.DirectConstants;
+import comm.utils.redis.impl.AllAirportRepositoryImpl;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -27,6 +30,9 @@ import org.springframework.util.CollectionUtils;
 @Service
 public class AllAirportsServiceImpl extends ServiceImpl<AllAirportsMapper, AllAirports> implements AllAirportsService {
 
+    @Autowired
+    private AllAirportRepositoryImpl allAirportRepository;
+
     @Override
     public  IPage<AllAirports> pageAllAirports(Page<AllAirports> page,AllAirports allAirports){
         page = Optional.ofNullable(page).orElse(new Page<>());
@@ -38,28 +44,47 @@ public class AllAirportsServiceImpl extends ServiceImpl<AllAirportsMapper, AllAi
     @Transactional(rollbackFor = Exception.class)
     public boolean saveAllAirports(AllAirports allAirports){
         Assert.notNull(allAirports, "所有机场表为空");
-        return this.save(allAirports);
+        this.save(allAirports);
+        if(DirectConstants.NORMAL.equals(allAirports.getStatus())) {
+            allAirportRepository.saveOrUpdateCache(allAirports);
+        }else {
+            allAirportRepository.delete(allAirports);
+        }
+        return true;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean removeAllAirports(String id){
         Assert.hasText(id, "主键为空");
-        return this.removeById(id);
+        AllAirports allAirports=this.getById(id);
+        allAirports.setStatus(DirectConstants.DELETE);
+        this.updateById(allAirports);
+        allAirportRepository.delete(allAirports);
+        return true;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean removeAllAirportsByIds(List<String> ids){
         Assert.isTrue(!CollectionUtils.isEmpty(ids), "主键集合为空");
-        return this.removeByIds(ids);
+        ids.stream().forEach(e ->{
+            removeAllAirports(e);
+        });
+        return true;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean updateAllAirports(AllAirports allAirports){
         Assert.notNull(allAirports, "所有机场表为空");
-        return this.updateById(allAirports);
+        this.updateById(allAirports);
+        if(DirectConstants.NORMAL.equals(allAirports.getStatus())) {
+            allAirportRepository.saveOrUpdateCache(allAirports);
+        }else {
+            allAirportRepository.delete(allAirports);
+        }
+        return true;
     }
 
     @Override
@@ -74,7 +99,9 @@ public class AllAirportsServiceImpl extends ServiceImpl<AllAirportsMapper, AllAi
             gdsQueryWrapper.lambda().like(StringUtils.isNotBlank(allAirports.getCity()),AllAirports::getCity,allAirports.getCity())
                     .eq(StringUtils.isNotBlank(allAirports.getCcode()),AllAirports::getCcode,allAirports.getCcode())
             .like(StringUtils.isNotBlank(allAirports.getAirport()),AllAirports::getAirport,allAirports.getAirport())
-            .eq(StringUtils.isNotBlank(allAirports.getCode()),AllAirports::getCode,allAirports.getCode());
+            .eq(StringUtils.isNotBlank(allAirports.getCode()),AllAirports::getCode,allAirports.getCode())
+                    .like(StringUtils.isNotBlank(allAirports.getCountry()),AllAirports::getCountry,allAirports.getCountry())
+                    .eq(StringUtils.isNotBlank(allAirports.getGcode()),AllAirports::getGcode,allAirports.getGcode());
         }
         gdsQueryWrapper.lambda().orderByAsc(AllAirports::getCreateTime);
         return gdsQueryWrapper;

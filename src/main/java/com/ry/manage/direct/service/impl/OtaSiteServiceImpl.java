@@ -8,7 +8,9 @@ import com.ry.manage.direct.service.OtaSiteService;
 import comm.repository.entity.OtaSite;
 import comm.repository.mapper.OtaSiteMapper;
 import comm.utils.constant.DirectConstants;
+import comm.utils.redis.impl.OtaSiteRepositoryImpl;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -28,6 +30,9 @@ import org.springframework.util.CollectionUtils;
 @Service
 public class OtaSiteServiceImpl extends ServiceImpl<OtaSiteMapper, OtaSite> implements OtaSiteService {
 
+    @Autowired
+    private OtaSiteRepositoryImpl otaSiteRepository;
+
     @Override
     public  IPage<OtaSite> pageOtaSite(Page<OtaSite> page, OtaSite otaSite){
         page = Optional.ofNullable(page).orElse(new Page<>());
@@ -39,7 +44,13 @@ public class OtaSiteServiceImpl extends ServiceImpl<OtaSiteMapper, OtaSite> impl
     @Transactional(rollbackFor = Exception.class)
     public boolean saveOtaSite(OtaSite otaSite){
         Assert.notNull(otaSite, "OTA平台站点表为空");
-        return this.save(otaSite);
+        this.save(otaSite);
+        if(DirectConstants.NORMAL.equals(otaSite.getStatus())){
+            otaSiteRepository.saveOrUpdateCache(otaSite);
+        }else {
+            otaSiteRepository.delete(otaSite);
+        }
+        return true;
     }
 
     @Override
@@ -48,21 +59,32 @@ public class OtaSiteServiceImpl extends ServiceImpl<OtaSiteMapper, OtaSite> impl
         Assert.hasText(id, "主键为空");
         OtaSite otaSite = this.getById(id);
         otaSite.setStatus(DirectConstants.DELETE);
-        return this.updateById(otaSite);
+        this.updateById(otaSite);
+        otaSiteRepository.delete(otaSite);
+        return true;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean removeOtaSiteByIds(List<String> ids){
         Assert.isTrue(!CollectionUtils.isEmpty(ids), "主键集合为空");
-        return this.removeByIds(ids);
+        ids.stream().forEach(e ->{
+            removeOtaSite(e);
+        });
+        return true;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean updateOtaSite(OtaSite otaSite){
         Assert.notNull(otaSite, "OTA平台站点表为空");
-        return this.updateById(otaSite);
+        this.updateById(otaSite);
+        if(DirectConstants.NORMAL.equals(otaSite.getStatus())){
+            otaSiteRepository.saveOrUpdateCache(otaSite);
+        }else {
+            otaSiteRepository.delete(otaSite);
+        }
+        return true;
     }
 
     @Override
@@ -74,7 +96,13 @@ public class OtaSiteServiceImpl extends ServiceImpl<OtaSiteMapper, OtaSite> impl
     public boolean changeOtaSiteStatus(OtaSite otaSite){
         OtaSite status = this.getById(otaSite.getId());
         status.setStatus(otaSite.getStatus());
-        return this.updateById(status);
+        this.updateById(status);
+        if(DirectConstants.NORMAL.equals(status.getStatus())){
+            otaSiteRepository.saveOrUpdateCache(status);
+        }else {
+            otaSiteRepository.delete(status);
+        }
+        return true;
     }
 
     public QueryWrapper<OtaSite> buildQueryWrapper(OtaSite otaSite){

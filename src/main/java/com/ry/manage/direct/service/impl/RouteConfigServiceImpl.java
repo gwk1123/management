@@ -8,7 +8,9 @@ import com.ry.manage.direct.service.RouteConfigService;
 import comm.repository.entity.RouteConfig;
 import comm.repository.mapper.RouteConfigMapper;
 import comm.utils.constant.DirectConstants;
+import comm.utils.redis.impl.RouteConfigRepositoryImpl;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -28,6 +30,9 @@ import org.springframework.util.CollectionUtils;
 @Service
 public class RouteConfigServiceImpl extends ServiceImpl<RouteConfigMapper, RouteConfig> implements RouteConfigService {
 
+    @Autowired
+    private RouteConfigRepositoryImpl routeConfigRepository;
+
     @Override
     public  IPage<RouteConfig> pageRouteConfig(Page<RouteConfig> page,RouteConfig routeConfig){
         page = Optional.ofNullable(page).orElse(new Page<>());
@@ -39,7 +44,13 @@ public class RouteConfigServiceImpl extends ServiceImpl<RouteConfigMapper, Route
     @Transactional(rollbackFor = Exception.class)
     public boolean saveRouteConfig(RouteConfig routeConfig){
         Assert.notNull(routeConfig, "航线路由信息为空");
-        return this.save(routeConfig);
+        this.save(routeConfig);
+        if(DirectConstants.NORMAL.equals(routeConfig.getStatus())){
+            routeConfigRepository.saveOrUpdateCache(routeConfig);
+        }else {
+            routeConfigRepository.delete(routeConfig);
+        }
+        return true;
     }
 
     @Override
@@ -48,28 +59,45 @@ public class RouteConfigServiceImpl extends ServiceImpl<RouteConfigMapper, Route
         Assert.hasText(id, "主键为空");
         RouteConfig routeConfig =this.getById(id);
         routeConfig.setStatus(DirectConstants.DELETE);
-        return this.updateById(routeConfig);
+        this.updateById(routeConfig);
+        routeConfigRepository.delete(routeConfig);
+        return true;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean removeRouteConfigByIds(List<String> ids){
         Assert.isTrue(!CollectionUtils.isEmpty(ids), "主键集合为空");
-        return this.removeByIds(ids);
+        ids.stream().forEach(e ->{
+            removeRouteConfig(e);
+        });
+        return true;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean updateRouteConfig(RouteConfig routeConfig){
         Assert.notNull(routeConfig, "航线路由信息(ml_route_config) 为空");
-        return this.updateById(routeConfig);
+        this.updateById(routeConfig);
+        if(DirectConstants.NORMAL.equals(routeConfig.getStatus())){
+            routeConfigRepository.saveOrUpdateCache(routeConfig);
+        }else {
+            routeConfigRepository.delete(routeConfig);
+        }
+        return true;
     }
 
     @Override
     public boolean changeRouteConfigStatus(RouteConfig routeConfig){
         RouteConfig status = this.getById(routeConfig.getId());
         status.setStatus(routeConfig.getStatus());
-        return this.updateById(status);
+        this.updateById(status);
+        if(DirectConstants.NORMAL.equals(status.getStatus())){
+            routeConfigRepository.saveOrUpdateCache(status);
+        }else {
+            routeConfigRepository.delete(status);
+        }
+        return true;
     }
 
     @Override

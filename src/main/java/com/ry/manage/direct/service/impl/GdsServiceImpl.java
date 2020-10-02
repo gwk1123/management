@@ -8,7 +8,10 @@ import com.ry.manage.direct.service.GdsService;
 import comm.repository.entity.Gds;
 import comm.repository.mapper.GdsMapper;
 import comm.utils.constant.DirectConstants;
+import comm.utils.redis.impl.GdsRepositoryImpl;
+import comm.utils.redis.impl.GdsRuleRepositoryImpl;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -28,6 +31,9 @@ import org.springframework.util.CollectionUtils;
 @Service
 public class GdsServiceImpl extends ServiceImpl<GdsMapper, Gds> implements GdsService {
 
+    @Autowired
+    private GdsRepositoryImpl gdsRepository;
+
     @Override
     public  IPage<Gds> pageGds(Page<Gds> page,Gds gds){
         page = Optional.ofNullable(page).orElse(new Page<>());
@@ -39,7 +45,13 @@ public class GdsServiceImpl extends ServiceImpl<GdsMapper, Gds> implements GdsSe
     @Transactional(rollbackFor = Exception.class)
     public boolean saveGds(Gds gds){
         Assert.notNull(gds, "GDS信息为空");
-        return this.save(gds);
+        this.save(gds);
+        if(DirectConstants.NORMAL.equals(gds.getStatus())){
+            gdsRepository.saveOrUpdateCache(gds);
+        }else {
+            gdsRepository.delete(gds);
+        }
+        return true;
     }
 
     @Override
@@ -48,21 +60,32 @@ public class GdsServiceImpl extends ServiceImpl<GdsMapper, Gds> implements GdsSe
         Assert.hasText(id, "主键为空");
         Gds gds = this.getById(id);
         gds.setStatus(DirectConstants.DELETE);
-        return this.updateById(gds);
+        this.updateById(gds);
+        gdsRepository.delete(gds);
+        return true;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean removeGdsByIds(List<String> ids){
         Assert.isTrue(!CollectionUtils.isEmpty(ids), "主键集合为空");
-        return this.removeByIds(ids);
+        ids.stream().forEach(e ->{
+            removeGds(e);
+        });
+        return true;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean updateGds(Gds gds){
         Assert.notNull(gds, "GDS信息为空");
-        return this.updateById(gds);
+        this.updateById(gds);
+        if(DirectConstants.NORMAL.equals(gds.getStatus())){
+            gdsRepository.saveOrUpdateCache(gds);
+        }else {
+            gdsRepository.delete(gds);
+        }
+        return true;
     }
 
     @Override
@@ -74,7 +97,13 @@ public class GdsServiceImpl extends ServiceImpl<GdsMapper, Gds> implements GdsSe
     public boolean changeGdsStatus(Gds gds){
         Gds gdsStatus = this.getById(gds.getId());
         gdsStatus.setStatus(gds.getStatus());
-        return this.updateById(gdsStatus);
+        this.updateById(gdsStatus);
+        if(DirectConstants.NORMAL.equals(gdsStatus.getStatus())){
+            gdsRepository.saveOrUpdateCache(gdsStatus);
+        }else {
+            gdsRepository.delete(gdsStatus);
+        }
+        return true;
     }
 
     public QueryWrapper<Gds> buildQueryWrapper(Gds gds){

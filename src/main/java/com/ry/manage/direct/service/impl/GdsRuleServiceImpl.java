@@ -7,6 +7,9 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ry.manage.direct.service.GdsRuleService;
 import comm.repository.entity.GdsRule;
 import comm.repository.mapper.GdsRuleMapper;
+import comm.utils.constant.DirectConstants;
+import comm.utils.redis.impl.GdsRuleRepositoryImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -27,6 +30,9 @@ import java.util.Optional;
 @Service
 public class GdsRuleServiceImpl extends ServiceImpl<GdsRuleMapper, GdsRule> implements GdsRuleService {
 
+    @Autowired
+    private GdsRuleRepositoryImpl gdsRuleRepository;
+
     @Override
     public  IPage<GdsRule> pageGdsRule(Page<GdsRule> page,GdsRule gdsRule){
 
@@ -40,28 +46,47 @@ public class GdsRuleServiceImpl extends ServiceImpl<GdsRuleMapper, GdsRule> impl
     @Transactional(rollbackFor = Exception.class)
     public boolean saveGdsRule(GdsRule gdsRule){
         Assert.notNull(gdsRule, "gds规则为空");
-        return this.save(gdsRule);
+        this.save(gdsRule);
+        if(DirectConstants.NORMAL.equals(gdsRule.getStatus())){
+            gdsRuleRepository.saveOrUpdateCache(gdsRule);
+        }else {
+            gdsRuleRepository.delete(gdsRule);
+        }
+        return true;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean removeGdsRule(String id){
         Assert.hasText(id, "主键为空");
-        return this.removeById(id);
+        GdsRule gdsRule =this.getById(id);
+        gdsRule.setStatus(DirectConstants.DELETE);
+        this.updateById(gdsRule);
+        gdsRuleRepository.delete(gdsRule);
+        return true;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean removeGdsRuleByIds(List<String> ids){
         Assert.isTrue(!CollectionUtils.isEmpty(ids), "主键集合为空");
-        return this.removeByIds(ids);
+        ids.stream().forEach(e ->{
+            removeGdsRule(e);
+        });
+        return true;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean updateGdsRule(GdsRule gdsRule){
         Assert.notNull(gdsRule, "gds规则为空");
-        return this.updateById(gdsRule);
+        this.updateById(gdsRule);
+        if(DirectConstants.NORMAL.equals(gdsRule.getStatus())){
+            gdsRuleRepository.saveOrUpdateCache(gdsRule);
+        }else {
+            gdsRuleRepository.delete(gdsRule);
+        }
+        return true;
     }
 
     @Override

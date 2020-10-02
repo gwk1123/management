@@ -8,7 +8,9 @@ import com.ry.manage.direct.service.GdsPccService;
 import comm.repository.entity.GdsPcc;
 import comm.repository.mapper.GdsPccMapper;
 import comm.utils.constant.DirectConstants;
+import comm.utils.redis.impl.GdsPccRepositoryImpl;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -28,6 +30,9 @@ import org.springframework.util.CollectionUtils;
 @Service
 public class GdsPccServiceImpl extends ServiceImpl<GdsPccMapper, GdsPcc> implements GdsPccService {
 
+    @Autowired
+    private GdsPccRepositoryImpl gdsPccRepository;
+
     @Override
     public  IPage<GdsPcc> pageGdsPcc(Page<GdsPcc> page,GdsPcc gdsPcc){
         page = Optional.ofNullable(page).orElse(new Page<>());
@@ -39,7 +44,13 @@ public class GdsPccServiceImpl extends ServiceImpl<GdsPccMapper, GdsPcc> impleme
     @Transactional(rollbackFor = Exception.class)
     public boolean saveGdsPcc(GdsPcc gdsPcc){
         Assert.notNull(gdsPcc, "GDS PCC配置为空");
-        return this.save(gdsPcc);
+        this.save(gdsPcc);
+        if(DirectConstants.NORMAL.equals(gdsPcc.getStatus())){
+            gdsPccRepository.saveOrUpdateCache(gdsPcc);
+        }else {
+            gdsPccRepository.delete(gdsPcc);
+        }
+        return true;
     }
 
     @Override
@@ -48,14 +59,18 @@ public class GdsPccServiceImpl extends ServiceImpl<GdsPccMapper, GdsPcc> impleme
         Assert.hasText(id, "主键为空");
         GdsPcc gdsPcc = this.getById(id);
         gdsPcc.setStatus(DirectConstants.DELETE);
-        return this.updateById(gdsPcc);
+        this.updateById(gdsPcc);
+        gdsPccRepository.delete(gdsPcc);
+        return true;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean removeGdsPccByIds(List<String> ids){
         Assert.isTrue(!CollectionUtils.isEmpty(ids), "主键集合为空");
-        //TODO
+        ids.stream().forEach(e ->{
+            removeGdsPcc(e);
+        });
         return true;
     }
 
@@ -63,7 +78,13 @@ public class GdsPccServiceImpl extends ServiceImpl<GdsPccMapper, GdsPcc> impleme
     @Transactional(rollbackFor = Exception.class)
     public boolean updateGdsPcc(GdsPcc gdsPcc){
         Assert.notNull(gdsPcc, "GDS PCC配置为空");
-        return this.updateById(gdsPcc);
+        this.updateById(gdsPcc);
+        if(DirectConstants.NORMAL.equals(gdsPcc.getStatus())){
+            gdsPccRepository.saveOrUpdateCache(gdsPcc);
+        }else {
+            gdsPccRepository.delete(gdsPcc);
+        }
+        return true;
     }
 
     @Override

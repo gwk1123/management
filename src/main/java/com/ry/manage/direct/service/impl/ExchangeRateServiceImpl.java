@@ -7,12 +7,17 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ry.manage.direct.service.ExchangeRateService;
 import comm.repository.entity.ExchangeRate;
 import comm.repository.mapper.ExchangeRateMapper;
+import comm.utils.constant.DirectConstants;
+import comm.utils.redis.impl.ExchangeRateRepositoryImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.util.CollectionUtils;
+
+import javax.xml.ws.Action;
 
 
 /**
@@ -25,6 +30,9 @@ import org.springframework.util.CollectionUtils;
  */
 @Service
 public class ExchangeRateServiceImpl extends ServiceImpl<ExchangeRateMapper, ExchangeRate> implements ExchangeRateService {
+
+    @Autowired
+    private ExchangeRateRepositoryImpl exchangeRateRepository;
 
     @Override
     public  IPage<ExchangeRate> pageExchangeRate(Page<ExchangeRate> page,ExchangeRate exchangeRate){
@@ -39,28 +47,47 @@ public class ExchangeRateServiceImpl extends ServiceImpl<ExchangeRateMapper, Exc
     @Transactional(rollbackFor = Exception.class)
     public boolean saveExchangeRate(ExchangeRate exchangeRate){
         Assert.notNull(exchangeRate, "实时外汇数据为空");
-        return this.save(exchangeRate);
+        this.save(exchangeRate);
+        if(DirectConstants.NORMAL.equals(exchangeRate.getStatus())) {
+            exchangeRateRepository.saveOrUpdateCache(exchangeRate);
+        }else {
+            exchangeRateRepository.delete(exchangeRate);
+        }
+        return true;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean removeExchangeRate(String id){
         Assert.hasText(id, "主键为空");
-        return this.removeById(id);
+        ExchangeRate exchangeRate = this.getById(id);
+        exchangeRate.setStatus(DirectConstants.DELETE);
+        this.updateById(exchangeRate);
+        exchangeRateRepository.delete(exchangeRate);
+        return true;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean removeExchangeRateByIds(List<String> ids){
         Assert.isTrue(!CollectionUtils.isEmpty(ids), "主键集合为空");
-        return this.removeByIds(ids);
+        ids.stream().forEach(e ->{
+            removeExchangeRate(e);
+        });
+        return true;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean updateExchangeRate(ExchangeRate exchangeRate){
         Assert.notNull(exchangeRate, "实时外汇数据为空");
-        return this.updateById(exchangeRate);
+        this.updateById(exchangeRate);
+        if(DirectConstants.NORMAL.equals(exchangeRate.getStatus())) {
+            exchangeRateRepository.saveOrUpdateCache(exchangeRate);
+        }else {
+            exchangeRateRepository.delete(exchangeRate);
+        }
+        return true;
     }
 
     @Override

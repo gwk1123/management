@@ -9,12 +9,15 @@ import comm.repository.entity.GdsPcc;
 import comm.repository.entity.SiteRulesSwitch;
 import comm.repository.mapper.SiteRulesSwitchMapper;
 import comm.utils.constant.DirectConstants;
+import comm.utils.redis.impl.SiteRulesSwitchRepositoryImpl;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
+import javax.xml.ws.Action;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,6 +33,9 @@ import java.util.Optional;
 @Service
 public class SiteRulesSwitchServiceImpl extends ServiceImpl<SiteRulesSwitchMapper, SiteRulesSwitch> implements SiteRulesSwitchService {
 
+    @Autowired
+    private SiteRulesSwitchRepositoryImpl siteRulesSwitchRepository;
+
     @Override
     public  IPage<SiteRulesSwitch> pageSiteRulesSwitch(Page<SiteRulesSwitch> page, SiteRulesSwitch siteRulesSwitch){
 
@@ -42,28 +48,47 @@ public class SiteRulesSwitchServiceImpl extends ServiceImpl<SiteRulesSwitchMappe
     @Transactional(rollbackFor = Exception.class)
     public boolean saveSiteRulesSwitch(SiteRulesSwitch siteRulesSwitch){
         Assert.notNull(siteRulesSwitch, "站点规则开关为空");
-        return this.save(siteRulesSwitch);
+        this.save(siteRulesSwitch);
+        if(DirectConstants.NORMAL.equals(siteRulesSwitch.getStatus())){
+            siteRulesSwitchRepository.saveOrUpdateCache(siteRulesSwitch);
+        }else {
+            siteRulesSwitchRepository.delete(siteRulesSwitch);
+        }
+        return true;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean removeSiteRulesSwitch(String id){
         Assert.hasText(id, "主键为空");
-        return this.removeById(id);
+        SiteRulesSwitch siteRulesSwitch=this.getById(id);
+        siteRulesSwitch.setStatus(DirectConstants.DELETE);
+        this.updateById(siteRulesSwitch);
+        siteRulesSwitchRepository.delete(siteRulesSwitch);
+        return true;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean removeSiteRulesSwitchByIds(List<String> ids){
         Assert.isTrue(!CollectionUtils.isEmpty(ids), "主键集合为空");
-        return this.removeByIds(ids);
+        ids.stream().forEach(e ->{
+            removeSiteRulesSwitch(e);
+        });
+        return true;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean updateSiteRulesSwitch(SiteRulesSwitch siteRulesSwitch){
         Assert.notNull(siteRulesSwitch, "站点规则开关为空");
-        return this.updateById(siteRulesSwitch);
+        this.updateById(siteRulesSwitch);
+        if(DirectConstants.NORMAL.equals(siteRulesSwitch.getStatus())){
+            siteRulesSwitchRepository.saveOrUpdateCache(siteRulesSwitch);
+        }else {
+            siteRulesSwitchRepository.delete(siteRulesSwitch);
+        }
+        return true;
     }
 
     @Override
