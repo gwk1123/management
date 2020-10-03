@@ -10,8 +10,6 @@ import org.springframework.context.annotation.ComponentScan;
 @EnableFeignClients(basePackages = {"com.sibecommon.feign"})
 @SpringBootApplication
 @MapperScan({"com.ry.manage.sys.mapper","com.sibecommon.repository.mapper"})
-//@ComponentScan({"com.ry.manage", "com.sibecommon.utils", "com.sibecommon.config", "com.sibecommon.runner"
-//        , "com.sibecommon.repository.mapper", "com.sibecommon.service"})
 @ComponentScan({"com.ry.manage", "com.sibecommon"})
 public class ManageApplication {
 
