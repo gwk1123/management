@@ -1,17 +1,17 @@
 package com.ry.manage.sys.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.ry.manage.common.constant.Constants;
-import com.ry.manage.common.redis.RedisCache;
-import com.ry.manage.security.util.JwtTokenUtil;
 import com.ry.manage.sys.auth.bo.AdminUserDetails;
 import com.ry.manage.sys.entity.SysRole;
 import com.ry.manage.sys.entity.SysUser;
 import com.ry.manage.sys.entity.SysUserRole;
 import com.ry.manage.sys.service.*;
+import com.ry.manage.common.constant.Constants;
+import com.ry.manage.common.redis.RedisCache;
+import com.ry.manage.security.util.JwtTokenUtil;
+import com.ry.manage.sys.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,6 +21,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+import com.ry.manage.sys.service.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashSet;

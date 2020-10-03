@@ -1,10 +1,9 @@
 package com.ry.manage.direct.controller;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ry.manage.common.CommonResult;
 import com.ry.manage.direct.service.PolicyGlobalService;
-import comm.repository.entity.PolicyGlobal;
+import com.sibecommon.repository.entity.PolicyGlobal;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;

@@ -1,10 +1,9 @@
 package com.ry.manage.direct.controller;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ry.manage.common.CommonResult;
 import com.ry.manage.direct.service.OtaRuleService;
-import comm.repository.entity.OtaRule;
+import com.sibecommon.repository.entity.OtaRule;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;

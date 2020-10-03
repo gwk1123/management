@@ -1,7 +1,7 @@
 package com.ry.manage.direct.controller;
 
 import com.ry.manage.direct.service.SegmentRewardRuleService;
-import comm.repository.entity.SegmentRewardRule;
+import com.sibecommon.repository.entity.SegmentRewardRule;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import org.springframework.web.bind.annotation.*;

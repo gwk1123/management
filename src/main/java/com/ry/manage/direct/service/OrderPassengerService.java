@@ -3,7 +3,7 @@ package com.ry.manage.direct.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import comm.repository.entity.OrderPassenger;
+import com.sibecommon.repository.entity.OrderPassenger;
 
 import java.util.List;
 

@@ -2,7 +2,7 @@ package com.ry.manage.common.utils;
 
 import com.ry.manage.sys.auth.bo.AdminUserDetails;
 import com.ry.manage.sys.entity.SysUser;
-import comm.utils.exception.CustomException;
+import com.sibecommon.utils.exception.CustomException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

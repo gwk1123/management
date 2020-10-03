@@ -3,7 +3,7 @@ package com.ry.manage.direct.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import comm.repository.entity.QueueLetterBox;
+import com.sibecommon.repository.entity.QueueLetterBox;
 
 import java.util.List;
 

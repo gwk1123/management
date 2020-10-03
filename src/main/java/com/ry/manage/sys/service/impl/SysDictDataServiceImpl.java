@@ -4,20 +4,16 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.ry.manage.common.constant.UserConstants;
-import com.ry.manage.common.redis.RedisCache;
 import com.ry.manage.sys.entity.SysDictData;
-import com.ry.manage.sys.entity.SysRole;
 import com.ry.manage.sys.mapper.SysDictDataMapper;
 import com.ry.manage.sys.service.SysDictDataService;
+import com.ry.manage.common.constant.UserConstants;
+import com.ry.manage.common.redis.RedisCache;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
-import org.springframework.util.CollectionUtils;
 
-import javax.xml.ws.Action;
 import java.util.List;
 import java.util.Optional;
 

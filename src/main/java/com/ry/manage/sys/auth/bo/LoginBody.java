@@ -2,7 +2,7 @@ package com.ry.manage.sys.auth.bo;
 
 /**
  * 用户登录对象
- * 
+ *
  * @author ruoyi
  */
 public class LoginBody

@@ -2,8 +2,8 @@ package com.ry.manage.common.handler;
 
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
-import com.ry.manage.common.utils.SecurityUtils;
 import com.ry.manage.sys.entity.SysUser;
+import com.ry.manage.common.utils.SecurityUtils;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;
 

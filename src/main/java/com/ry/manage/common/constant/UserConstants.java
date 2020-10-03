@@ -2,7 +2,7 @@ package com.ry.manage.common.constant;
 
 /**
  * 用户常量信息
- * 
+ *
  * @author ruoyi
  */
 public class UserConstants

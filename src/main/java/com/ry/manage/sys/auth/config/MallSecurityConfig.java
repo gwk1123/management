@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ry.manage.security.component.DynamicSecurityService;
 import com.ry.manage.security.config.SecurityConfig;
 import com.ry.manage.sys.entity.SysMenu;
-import com.ry.manage.sys.entity.SysUser;
 import com.ry.manage.sys.service.SysMenuService;
 import com.ry.manage.sys.service.SysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
-import javax.xml.namespace.QName;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

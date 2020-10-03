@@ -1,7 +1,7 @@
 package com.ry.manage.direct.controller;
 
 import com.ry.manage.direct.service.CurrencyPairsService;
-import comm.repository.entity.CurrencyPairs;
+import com.sibecommon.repository.entity.CurrencyPairs;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import org.springframework.web.bind.annotation.*;

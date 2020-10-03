@@ -1,17 +1,14 @@
 package com.ry.manage.sys.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ry.manage.common.CommonResult;
-import com.ry.manage.common.constant.Constants;
-import com.ry.manage.common.utils.ServletUtils;
 import com.ry.manage.sys.auth.bo.LoginBody;
 import com.ry.manage.sys.entity.SysMenu;
 import com.ry.manage.sys.entity.SysUser;
 import com.ry.manage.sys.service.SysMenuService;
+import com.ry.manage.common.CommonResult;
+import com.ry.manage.common.constant.Constants;
+import com.ry.manage.common.utils.ServletUtils;
 import com.ry.manage.sys.service.SysRoleService;
 import com.ry.manage.sys.service.impl.SysLoginServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,7 +19,7 @@ import java.util.Set;
 
 /**
  * 登录验证
- * 
+ *
  * @author ruoyi
  */
 @RestController
@@ -43,7 +40,7 @@ public class SysLoginController
 
     /**
      * 登录方法
-     * 
+     *
      * @param loginBody 登陆信息
      * @return 结果
      */
@@ -60,7 +57,7 @@ public class SysLoginController
 
     /**
      * 获取用户信息
-     * 
+     *
      * @return 用户信息
      */
     @GetMapping("/getInfo")
@@ -80,7 +77,7 @@ public class SysLoginController
 
     /**
      * 获取路由信息
-     * 
+     *
      * @return 路由信息
      */
     @GetMapping("/getRouters")

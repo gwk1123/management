@@ -1,7 +1,7 @@
 package com.ry.manage.direct.controller;
 
 import com.ry.manage.direct.service.OrderPassengerService;
-import comm.repository.entity.OrderPassenger;
+import com.sibecommon.repository.entity.OrderPassenger;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import org.springframework.web.bind.annotation.*;

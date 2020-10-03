@@ -3,9 +3,7 @@ package com.ry.manage.sys.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.ry.manage.common.CommonResult;
 import com.ry.manage.sys.entity.SysDictData;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package com.ry.manage.direct.controller;
 
 import com.ry.manage.direct.service.ExchangeRateHisService;
-import comm.repository.entity.ExchangeRateHis;
+import com.sibecommon.repository.entity.ExchangeRateHis;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import org.springframework.web.bind.annotation.*;

@@ -2,9 +2,9 @@ package com.ry.manage.direct.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.ry.manage.common.CommonResult;
 import com.ry.manage.direct.service.GdsRuleService;
-import comm.repository.entity.GdsRule;
+import com.sibecommon.repository.entity.GdsRule;
+import com.ry.manage.common.CommonResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;

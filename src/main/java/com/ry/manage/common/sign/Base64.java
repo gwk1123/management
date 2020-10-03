@@ -2,7 +2,7 @@ package com.ry.manage.common.sign;
 
 /**
  * Base64工具类
- * 
+ *
  * @author ruoyi
  */
 public final class Base64

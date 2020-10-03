@@ -5,10 +5,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ry.manage.direct.service.ExchangeRateService;
-import comm.repository.entity.ExchangeRate;
-import comm.repository.mapper.ExchangeRateMapper;
-import comm.utils.constant.DirectConstants;
-import comm.utils.redis.impl.ExchangeRateRepositoryImpl;
+import com.sibecommon.repository.entity.ExchangeRate;
+import com.sibecommon.repository.mapper.ExchangeRateMapper;
+import com.sibecommon.utils.constant.DirectConstants;
+import com.sibecommon.utils.redis.impl.ExchangeRateRepositoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
@@ -16,8 +16,6 @@ import org.springframework.util.Assert;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.util.CollectionUtils;
-
-import javax.xml.ws.Action;
 
 
 /**

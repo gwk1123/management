@@ -6,8 +6,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.ry.manage.sys.entity.SysUser;
 import com.ry.manage.sys.entity.SysUserRole;
 
-import java.util.List;
-
 /**
  * <p>
  * 用户和角色关联表 服务类

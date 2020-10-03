@@ -12,7 +12,7 @@ import java.util.Random;
 
 /**
  * 验证码工具类
- * 
+ *
  * @author ruoyi
  */
 public class VerifyCodeUtils
@@ -24,7 +24,7 @@ public class VerifyCodeUtils
 
     /**
      * 使用系统默认字符源生成验证码
-     * 
+     *
      * @param verifySize 验证码长度
      * @return
      */
@@ -35,7 +35,7 @@ public class VerifyCodeUtils
 
     /**
      * 使用指定源生成验证码
-     * 
+     *
      * @param verifySize 验证码长度
      * @param sources 验证码字符源
      * @return
@@ -58,7 +58,7 @@ public class VerifyCodeUtils
 
     /**
      * 输出指定验证码图片流
-     * 
+     *
      * @param w
      * @param h
      * @param os

@@ -2,10 +2,10 @@ package com.ry.manage.sys.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ry.manage.sys.entity.SysRole;
 import com.ry.manage.common.CommonResult;
 import com.ry.manage.common.constant.UserConstants;
 import com.ry.manage.common.utils.SecurityUtils;
-import com.ry.manage.sys.entity.SysRole;
 import com.ry.manage.sys.service.SysRoleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -13,8 +13,6 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * <p>

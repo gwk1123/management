@@ -6,7 +6,6 @@ import com.ry.manage.common.constant.Constants;
 import com.ry.manage.common.redis.RedisCache;
 import com.ry.manage.common.sign.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * 验证码操作处理
- * 
+ *
  * @author ruoyi
  */
 @RestController

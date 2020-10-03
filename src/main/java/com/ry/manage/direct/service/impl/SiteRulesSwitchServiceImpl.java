@@ -4,12 +4,11 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.sibecommon.repository.entity.SiteRulesSwitch;
+import com.sibecommon.repository.mapper.SiteRulesSwitchMapper;
+import com.sibecommon.utils.constant.DirectConstants;
+import com.sibecommon.utils.redis.impl.SiteRulesSwitchRepositoryImpl;
 import com.ry.manage.direct.service.SiteRulesSwitchService;
-import comm.repository.entity.GdsPcc;
-import comm.repository.entity.SiteRulesSwitch;
-import comm.repository.mapper.SiteRulesSwitchMapper;
-import comm.utils.constant.DirectConstants;
-import comm.utils.redis.impl.SiteRulesSwitchRepositoryImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
-import javax.xml.ws.Action;
 import java.util.List;
 import java.util.Optional;
 
