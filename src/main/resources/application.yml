@@ -64,3 +64,27 @@ secure:
       - /**/*.html
       - /webjars/**
       - /*/api-docs
+
+
+sxysibe:
+    gds:
+        amadeus:
+            app-key: test
+            search-url: http://localhost:9091
+#            verify-url: http://localhost:9091
+#            order-url: http://localhost:9091
+            contact:
+                name: A1IncLtd
+                address: FLAT G, 15/F, KINGLAND APARTMENTS, 739 NATHAN ROAD MONGKOK, KOWLOON, HK
+                mobile: SZX 86-18948735931-HONG KONG NG CHOW INTERNATIONAL TRAVEL
+                ctct: 8618948735931
+        galileo:
+            app-key: test
+            search-url: http://localhost:9092
+#            verify-url: http://localhost:9092
+#            order-url: http://localhost:9092
+            contact:
+                name: HONG KONG NG CHOW INTERNATIONAL TRAVEL LTD - WEBSVC
+                address: FLAT G, 15/F, KINGLAND APARTMENTS, 739 NATHAN ROAD MONGKOK, KOWLOON, HK
+                mobile: 852-31055092
+                ctct: 8618948735931
