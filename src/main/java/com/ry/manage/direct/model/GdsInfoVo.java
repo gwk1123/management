@@ -13,10 +13,10 @@ public class GdsInfoVo {
      */
     private SibeRouting sibeRouting;
 
-    private BigDecimal adultPriceGds;
-    private BigDecimal adultTaxGds;
-    private BigDecimal childPriceGds;
-    private BigDecimal childTaxGds;
+    private String adultPriceGds;
+    private String adultTaxGds;
+    private String childPriceGds;
+    private String childTaxGds;
     /**
      * GDS行李额信息
      */

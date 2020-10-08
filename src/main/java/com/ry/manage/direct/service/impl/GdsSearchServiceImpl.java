@@ -1,15 +1,19 @@
 package com.ry.manage.direct.service.impl;
 
+import com.ry.manage.direct.model.GdsInfoVo;
 import com.ry.manage.direct.model.GdsSearchVm;
 import com.ry.manage.direct.model.GdsSearchVo;
 import com.ry.manage.direct.model.LocalSiteSearchVo;
 import com.ry.manage.direct.service.GdsSearchService;
+import com.sibecommon.ota.ctrip.model.CtripRouting;
+import com.sibecommon.ota.ctrip.model.CtripSearchResponse;
 import com.sibecommon.ota.site.SibeRouting;
 import com.sibecommon.ota.site.SibeSearchRequest;
 import com.sibecommon.ota.site.SibeSearchResponse;
 import com.sibecommon.ota.site.SibeSegment;
 import com.sibecommon.utils.async.SibeSearchAsyncService;
 import com.sibecommon.utils.redis.GdsCacheService;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +29,7 @@ public class GdsSearchServiceImpl implements GdsSearchService {
 
     private Logger logger  = LoggerFactory.getLogger(GdsSearchServiceImpl.class);
     private final String TRIP_TYPE_ROUND_WAY = "2";
+    private static final String PLATFORM_CTRIP = "CTRIP";
 
     @Autowired
     private GdsCacheService gdsCacheService;
@@ -56,6 +61,12 @@ public class GdsSearchServiceImpl implements GdsSearchService {
             SibeSearchResponse sibeSearchResponse = (SibeSearchResponse) gdsCacheService.findOne(cacheKey, gdsKey, 1);
             sibeSearchResponses.add(sibeSearchResponse);
         });
+        gdsSearchVo=this.handleGdsInfo( sibeSearchResponses, gdsSearchVm);
+        //处理站点
+        for(String otaSite:gdsSearchVm.getOtaSites()){
+            String ota = "";
+            handleOtaSite(ota,otaSite, gdsSearchVo ,cacheKey);
+        }
 
         return null;
     }
@@ -105,10 +116,11 @@ public class GdsSearchServiceImpl implements GdsSearchService {
         Map<String, LocalSiteSearchVo> localSiteSearchVoMap = new ConcurrentHashMap<>();
         String tripType = gdsSearchVm.getTripType();
         sibeSearchResponses.stream().filter(Objects::nonNull).forEach(sibeResponse ->{
-            sibeResponse.getRoutings().stream().filter(Objects::nonNull).forEach(routing ->{
-
+            sibeResponse.getRoutings().stream().filter(Objects::nonNull).forEach(sibeRouting ->{
+                conversionGdsInfo(localSiteSearchVoMap, sibeRouting, tripType);
             });
         });
+        gdsSearchVo.setLocalSiteSearchVoMap(localSiteSearchVoMap);
         return gdsSearchVo;
     }
 
@@ -144,17 +156,36 @@ public class GdsSearchServiceImpl implements GdsSearchService {
         }
     }
 
-    public void a(Map<String, LocalSiteSearchVo> localSiteSearchVoMap,SibeRouting sibeRouting,String tripType){
+    public void conversionGdsInfo(Map<String, LocalSiteSearchVo> localSiteSearchVoMap,SibeRouting sibeRouting,String tripType){
         String gdsKey =this.generateGeneralGdsKey(sibeRouting, tripType);
-        if(localSiteSearchVoMap.containsKey(gdsKey)) {
+        if(!localSiteSearchVoMap.containsKey(gdsKey)) {
             LocalSiteSearchVo localSiteSearchVo = new LocalSiteSearchVo();
             localSiteSearchVo.getSegmentInfo().setFromSegments(sibeRouting.getFromSegments());
             localSiteSearchVo.getSegmentInfo().setRetSegments(sibeRouting.getRetSegments());
             localSiteSearchVo.getSegmentInfo().setValidatingCarrier(sibeRouting.getValidatingCarrier());
         }else {
-
+            GdsInfoVo gdsInfoVo=new GdsInfoVo();
+            gdsInfoVo.setAdultPriceGds(String.valueOf(sibeRouting.getAdultPriceGDS()));
+            gdsInfoVo.setAdultTaxGds(String.valueOf(sibeRouting.getAdultTaxGDS()));
+            gdsInfoVo.setChildPriceGds(String.valueOf(sibeRouting.getChildPriceGDS()));
+            gdsInfoVo.setChildTaxGds(String.valueOf(sibeRouting.getChildTaxGDS()));
+            gdsInfoVo.setSibeRouting(sibeRouting);
+            localSiteSearchVoMap.get(gdsKey).getGdsInfoVos().add(gdsInfoVo);
         }
+    }
 
+    public void handleOtaSite(String ota,String otaSite,GdsSearchVo gdsSearchVo,String cacheKey){
+        Object cacheObj = gdsCacheService.findString(cacheKey+"_"+ota+"-"+otaSite);
+    }
+
+    private void setSearchSiteInfoToSearchInfoDTO(String ota,Object cacheObj) {
+        switch (ota){
+            case PLATFORM_CTRIP:
+                CtripSearchResponse ctripSearchResponse = (CtripSearchResponse) cacheObj;
+                CtripRouting ctripRouting = ctripSearchResponse.getRoutings().get(0);
+                String[] dataKeyArray = StringUtils.split(ctripRouting.getData(),"|");
+//                Optional<Map<String,String>> dataInfoMapFromRedis = gdsCacheService.findOne(dataKeyArray[0]);
+        }
     }
 
 
