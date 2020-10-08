@@ -38,7 +38,7 @@ public class CaptchaController
         String uuid = UUID.randomUUID().toString().replaceAll("-","");
         String verifyKey = Constants.CAPTCHA_CODE_KEY + uuid;
 
-        redisCache.setCacheObject(verifyKey, verifyCode, Constants.CAPTCHA_EXPIRATION, TimeUnit.MINUTES);
+        redisCache.saveString(verifyKey, verifyCode, Constants.CAPTCHA_EXPIRATION, TimeUnit.MINUTES);
         // 生成图片
         int w = 111, h = 36;
         ByteArrayOutputStream stream = new ByteArrayOutputStream();

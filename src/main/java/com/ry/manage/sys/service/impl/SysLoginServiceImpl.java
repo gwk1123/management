@@ -76,8 +76,8 @@ public class SysLoginServiceImpl {
      */
     public String login(String username, String password, String code, String uuid) {
         String verifyKey = Constants.CAPTCHA_CODE_KEY + uuid;
-        String captcha = redisCache.getCacheObject(verifyKey);
-        redisCache.deleteObject(verifyKey);
+        String captcha = (String) redisCache.getString(verifyKey);
+        redisCache.deleteKey(verifyKey);
         String token = null;
         try {
             if (captcha == null) {
