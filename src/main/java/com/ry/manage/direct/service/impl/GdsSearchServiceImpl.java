@@ -1,23 +1,22 @@
 package com.ry.manage.direct.service.impl;
 
-import com.ry.manage.direct.model.GdsInfoVo;
-import com.ry.manage.direct.model.GdsSearchVm;
-import com.ry.manage.direct.model.GdsSearchVo;
-import com.ry.manage.direct.model.LocalSiteSearchVo;
+import com.alibaba.fastjson.JSON;
+import com.ry.manage.direct.model.*;
 import com.ry.manage.direct.service.GdsSearchService;
 import com.sibecommon.ota.ctrip.model.CtripRouting;
 import com.sibecommon.ota.ctrip.model.CtripSearchResponse;
-import com.sibecommon.ota.site.SibeRouting;
-import com.sibecommon.ota.site.SibeSearchRequest;
-import com.sibecommon.ota.site.SibeSearchResponse;
-import com.sibecommon.ota.site.SibeSegment;
+import com.sibecommon.ota.site.*;
 import com.sibecommon.utils.async.SibeSearchAsyncService;
+import com.sibecommon.utils.constant.SibeConstants;
+import com.sibecommon.utils.exception.CustomException;
+import com.sibecommon.utils.exception.CustomSibeException;
 import com.sibecommon.utils.redis.GdsCacheService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -28,7 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class GdsSearchServiceImpl implements GdsSearchService {
 
     private Logger logger  = LoggerFactory.getLogger(GdsSearchServiceImpl.class);
-    private final String TRIP_TYPE_ROUND_WAY = "2";
+    private static final String TRIP_TYPE_ROUND_WAY = "2";
     private static final String PLATFORM_CTRIP = "CTRIP";
 
     @Autowired
@@ -64,11 +63,10 @@ public class GdsSearchServiceImpl implements GdsSearchService {
         gdsSearchVo=this.handleGdsInfo( sibeSearchResponses, gdsSearchVm);
         //处理站点
         for(String otaSite:gdsSearchVm.getOtaSites()){
-            String ota = "";
-            handleOtaSite(ota,otaSite, gdsSearchVo ,cacheKey);
+            String ota = "CTRIP";
+            handleOtaSite(ota,otaSite, gdsSearchVo ,cacheKey,gdsSearchVm.getTripType());
         }
-
-        return null;
+        return gdsSearchVo;
     }
 
 
@@ -133,14 +131,11 @@ public class GdsSearchServiceImpl implements GdsSearchService {
      */
     private String generateGeneralGdsKey(SibeRouting routing, String tripType) {
         StringBuilder generalPlanKeyBuilder = new StringBuilder();
-
         generalPlanKeyBuilder.append(routing.getValidatingCarrier());
         generateGdsKey(generalPlanKeyBuilder, routing.getFromSegments());
-
         if(tripType.equals(TRIP_TYPE_ROUND_WAY)){
             generateGdsKey(generalPlanKeyBuilder, routing.getRetSegments());
         }
-
         return generalPlanKeyBuilder.toString();
     }
 
@@ -174,18 +169,98 @@ public class GdsSearchServiceImpl implements GdsSearchService {
         }
     }
 
-    public void handleOtaSite(String ota,String otaSite,GdsSearchVo gdsSearchVo,String cacheKey){
+    public void handleOtaSite(String ota,String otaSite,GdsSearchVo gdsSearchVo,String cacheKey,String tripType){
         Object cacheObj = gdsCacheService.findString(cacheKey+"_"+ota+"-"+otaSite);
+        setSearchSiteInfoToSearchInfoDTO( ota, cacheObj, tripType, gdsSearchVo);
     }
 
-    private void setSearchSiteInfoToSearchInfoDTO(String ota,Object cacheObj) {
+    private void setSearchSiteInfoToSearchInfoDTO(String ota,Object cacheObj,String tripType,GdsSearchVo gdsSearchVo) {
         switch (ota){
             case PLATFORM_CTRIP:
                 CtripSearchResponse ctripSearchResponse = (CtripSearchResponse) cacheObj;
                 CtripRouting ctripRouting = ctripSearchResponse.getRoutings().get(0);
                 String[] dataKeyArray = StringUtils.split(ctripRouting.getData(),"|");
-//                Optional<Map<String,String>> dataInfoMapFromRedis = gdsCacheService.findOne(dataKeyArray[0]);
+                Object data = gdsCacheService.findOne(dataKeyArray[0]);
+                Map<String,String> dataInfoMapFromRedis = (Map<String, String>) data;
+                if(!CollectionUtils.isEmpty(dataInfoMapFromRedis)){
+                    conversionOtaSiteInfo(dataInfoMapFromRedis, gdsSearchVo, tripType);
+                }
         }
+    }
+
+    public void conversionOtaSiteInfo(Map<String,String> dataInfoMap,GdsSearchVo gdsSearchVo,String tripType){
+        Map<String,LocalSiteSearchVo> localSiteSearchVoMap = gdsSearchVo.getLocalSiteSearchVoMap();
+        Collection<String> sibeRoutingDatas = dataInfoMap.values();
+        sibeRoutingDatas.stream().filter(Objects::nonNull).forEach(dataStr ->{
+            SibeRoutingData sibeRoutingData = JSON.parseObject(dataStr,SibeRoutingData.class);
+            String otaSiteKey = generateGeneralPlanKeyForCtrip(tripType,sibeRoutingData);
+           if(localSiteSearchVoMap.containsKey(otaSiteKey)){
+               LocalSiteSearchVo localSiteSearchVo= localSiteSearchVoMap.get(otaSiteKey);
+               if(CollectionUtils.isEmpty(localSiteSearchVo.getSiteInfoVos())){
+                   List<SiteInfoVo> siteInfoVos=new ArrayList<>();
+                   SiteInfoVo siteInfoVo =  setOtaSiteInfo(sibeRoutingData);
+                   siteInfoVos.add(siteInfoVo);
+                   localSiteSearchVo.setSiteInfoVos(siteInfoVos);
+               }else {
+                   SiteInfoVo siteInfoVo =  setOtaSiteInfo(sibeRoutingData);
+                   localSiteSearchVo.getSiteInfoVos().add(siteInfoVo);
+               }
+           }else {
+               //GDS的数据一定包含站点的数据
+               throw new CustomException("data异常");
+           }
+        });
+
+    }
+
+
+    /**
+     * 从携程的routing中获取信息，生成飞行方案key
+     * @param tripType
+     * @return
+     */
+    private static String generateGeneralPlanKeyForCtrip(String tripType,SibeRoutingData sibeRoutingData) {
+        StringBuilder generalPlanKeyBuilder = new StringBuilder();
+        generalPlanKeyBuilder.append(sibeRoutingData.getValidatingCarrier());
+
+        List<SibeSegment> segmentList = new ArrayList<>();
+        segmentList.addAll(sibeRoutingData.getFromSegments());
+        if(tripType.equals(TRIP_TYPE_ROUND_WAY)){
+            segmentList.addAll(sibeRoutingData.getRetSegments());
+        }
+        generatePlanKeyForCtrip(generalPlanKeyBuilder, segmentList, sibeRoutingData);
+        return generalPlanKeyBuilder.toString();
+    }
+
+    /**
+     * 生成携程某个航程的飞行方案key
+     * @param generalPlanKeyBuilder
+     * @param segmentList
+     */
+    private static void generatePlanKeyForCtrip(StringBuilder generalPlanKeyBuilder, List<SibeSegment> segmentList, SibeRoutingData sibeRoutingData) {
+        String[] originalCabins = sibeRoutingData.getSibePolicy().getOriginalCabins().split("-");
+
+        for (int i =0; i < segmentList.size(); i++) {
+            SibeSegment segment = segmentList.get(i);
+            generalPlanKeyBuilder
+                    .append(segment.getCarrier())
+                    .append(Integer.parseInt(segment.getFlightNumber().substring(2)))
+                    .append("-").append(originalCabins[i])
+                    .append("-").append(segment.getDepTime())
+                    .append("-").append(segment.getArrTime())
+                    .append(";");
+        }
+    }
+
+    public SiteInfoVo setOtaSiteInfo(SibeRoutingData sibeRoutingData){
+        SiteInfoVo siteInfoVo =new SiteInfoVo();
+        siteInfoVo.setAdultPriceOta(String.valueOf(sibeRoutingData.getSibePolicy().getPolicyAdultPriceOTA()));
+        siteInfoVo.setAdultTaxOta(String.valueOf(sibeRoutingData.getSibePolicy().getPolicyAdultTaxOTA()));
+        siteInfoVo.setChildPriceOta(String.valueOf(sibeRoutingData.getSibePolicy().getPolicyChildPriceOTA()));
+        siteInfoVo.setChildTaxOta(String.valueOf(sibeRoutingData.getSibePolicy().getPolicyChildTaxOTA()));
+        siteInfoVo.setGds(sibeRoutingData.getSibeRoute().getSearchPcc().getGdsCode());
+        siteInfoVo.setGdsPcc(sibeRoutingData.getSibeRoute().getSearchPcc().getPccCode());
+        return siteInfoVo;
     }
 
 

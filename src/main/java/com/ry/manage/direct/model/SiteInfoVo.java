@@ -7,10 +7,10 @@ import java.math.BigDecimal;
 @Data
 public class SiteInfoVo {
 
-    private String adultPriceSite;
-    private String adultTaxSite;
-    private String childPriceSite;
-    private String childTaxSite;
+    private String adultPriceOta;
+    private String adultTaxOta;
+    private String childPriceOta;
+    private String childTaxOta;
 
     private String gds;
     private String gdsPcc;
