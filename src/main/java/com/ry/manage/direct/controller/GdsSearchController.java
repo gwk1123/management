@@ -2,6 +2,7 @@ package com.ry.manage.direct.controller;
 
 
 import com.alibaba.fastjson.JSON;
+import com.ry.manage.common.CommonResult;
 import com.ry.manage.direct.model.GdsSearchVm;
 import com.ry.manage.direct.model.GdsSearchVo;
 import com.ry.manage.direct.service.GdsSearchService;
@@ -22,7 +23,7 @@ public class GdsSearchController {
     private GdsSearchService gdsSearchService;
 
     @PostMapping(value = "/gds_search")
-    public GdsSearchVo findGdsSearch(@RequestBody GdsSearchVm gdsSearchVm) throws InterruptedException {
+    public CommonResult findGdsSearch(@RequestBody GdsSearchVm gdsSearchVm) throws InterruptedException {
         String s = "{\n" +
                 "\"tripType\":\"1\",\n" +
                 "\"fromCity\":\"SZX\",\n" +
@@ -31,6 +32,6 @@ public class GdsSearchController {
                 "\"otaSites\":[\"CT001\"]\n" +
                 "}\n";
         gdsSearchVm = JSON.parseObject(s,GdsSearchVm.class);
-        return gdsSearchService.findGdsSearch(gdsSearchVm);
+        return CommonResult.success(gdsSearchService.findGdsSearch(gdsSearchVm));
     }
 }

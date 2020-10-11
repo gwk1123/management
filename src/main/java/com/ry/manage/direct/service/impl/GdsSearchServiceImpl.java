@@ -45,7 +45,7 @@ public class GdsSearchServiceImpl implements GdsSearchService {
             SibeSearchRequest sibeSearchRequest = generateSibeSearchRequest(gdsSearchVm);
             sibeSearchAsyncService.requestGdsAsyncB2C(sibeSearchRequest);
         }
-        Thread.sleep(10000);
+        Thread.sleep(5000);
         cacheContentKeySet = gdsCacheService.findAllKeys(cacheKey);
         GdsSearchVo gdsSearchVo = new GdsSearchVo();
         if (cacheContentKeySet == null || cacheContentKeySet.size() == 0) {
@@ -64,6 +64,12 @@ public class GdsSearchServiceImpl implements GdsSearchService {
             String ota = "CTRIP";
             handleOtaSite(ota, otaSite, gdsSearchVo, cacheKey, gdsSearchVm.getTripType());
         }
+        logger.info("----{}",JSON.toJSONString(gdsSearchVo));
+
+        LocalGdsSearchVo localGdsSearchVo =new LocalGdsSearchVo();
+        localGdsSearchVo.setOtaSite((Set<String>) gdsSearchVm.getOtaSites());
+        localGdsSearchVo.setGdsSource(cacheContentKeySet);
+        gdsSearchVo.setLocalGdsSearchVo(localGdsSearchVo);
         return gdsSearchVo;
     }
 

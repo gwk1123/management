@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 public class SegmentInfo {
 
-    private String validatingCarrier;
+    private String validatingCarrier = "CZ";
 
     private List<SibeSegment> fromSegments;
 

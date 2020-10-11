@@ -3,6 +3,7 @@ package com.ry.manage.direct.model;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 public class GdsSearchVm {
@@ -17,5 +18,5 @@ public class GdsSearchVm {
 
     private String retDate;
 
-    private List<String> otaSites;
+    private Set<String> otaSites;
 }

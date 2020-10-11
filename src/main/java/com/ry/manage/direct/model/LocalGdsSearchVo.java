@@ -18,5 +18,8 @@ public class LocalGdsSearchVo {
     private Set<String> flightNumber;
 
     //飞行类型
-    private Set<Integer> flightType;
+    private Set<String> flightType;
+
+    //站点数据
+    private Set<String> otaSite;
 }
