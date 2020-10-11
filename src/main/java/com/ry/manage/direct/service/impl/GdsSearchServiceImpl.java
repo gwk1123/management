@@ -1,5 +1,7 @@
 package com.ry.manage.direct.service.impl;
 
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSON;
 import com.ry.manage.direct.model.*;
 import com.ry.manage.direct.service.GdsSearchService;
@@ -43,11 +45,11 @@ public class GdsSearchServiceImpl implements GdsSearchService {
         Set<String> cacheContentKeySet = gdsCacheService.findAllKeys(cacheKey);
         //2.如果无缓存，则发起同步GDS请求
         //2.1生成同步步请求GDS对象
-        if(cacheContentKeySet == null || cacheContentKeySet.size() == 0){
+        if(CollectionUtils.isEmpty(cacheContentKeySet)){
             SibeSearchRequest sibeSearchRequest = generateSibeSearchRequest(gdsSearchVm);
             sibeSearchAsyncService.requestGdsAsyncB2C(sibeSearchRequest);
         }
-        Thread.sleep(5000);
+        Thread.sleep(10000);
         cacheContentKeySet = gdsCacheService.findAllKeys(cacheKey);
         GdsSearchVo gdsSearchVo =new GdsSearchVo();
         if(cacheContentKeySet == null || cacheContentKeySet.size() == 0){
@@ -155,9 +157,22 @@ public class GdsSearchServiceImpl implements GdsSearchService {
         String gdsKey =this.generateGeneralGdsKey(sibeRouting, tripType);
         if(!localSiteSearchVoMap.containsKey(gdsKey)) {
             LocalSiteSearchVo localSiteSearchVo = new LocalSiteSearchVo();
-            localSiteSearchVo.getSegmentInfo().setFromSegments(sibeRouting.getFromSegments());
-            localSiteSearchVo.getSegmentInfo().setRetSegments(sibeRouting.getRetSegments());
-            localSiteSearchVo.getSegmentInfo().setValidatingCarrier(sibeRouting.getValidatingCarrier());
+            SegmentInfo segmentInfo =new SegmentInfo();
+            segmentInfo.setFromSegments(sibeRouting.getFromSegments());
+            segmentInfo.setRetSegments(sibeRouting.getRetSegments());
+            segmentInfo.setValidatingCarrier(sibeRouting.getValidatingCarrier());
+            localSiteSearchVo.setSegmentInfo(segmentInfo);
+
+            GdsInfoVo gdsInfoVo=new GdsInfoVo();
+            gdsInfoVo.setAdultPriceGds(String.valueOf(sibeRouting.getAdultPriceGDS()));
+            gdsInfoVo.setAdultTaxGds(String.valueOf(sibeRouting.getAdultTaxGDS()));
+            gdsInfoVo.setChildPriceGds(String.valueOf(sibeRouting.getChildPriceGDS()));
+            gdsInfoVo.setChildTaxGds(String.valueOf(sibeRouting.getChildTaxGDS()));
+            gdsInfoVo.setSibeRouting(sibeRouting);
+            List<GdsInfoVo> gdsInfoVoList =new ArrayList<>();
+            gdsInfoVoList.add(gdsInfoVo);
+            localSiteSearchVo.setGdsInfoVos(gdsInfoVoList);
+            localSiteSearchVoMap.put(gdsKey,localSiteSearchVo);
         }else {
             GdsInfoVo gdsInfoVo=new GdsInfoVo();
             gdsInfoVo.setAdultPriceGds(String.valueOf(sibeRouting.getAdultPriceGDS()));
@@ -177,7 +192,7 @@ public class GdsSearchServiceImpl implements GdsSearchService {
     private void setSearchSiteInfoToSearchInfoDTO(String ota,Object cacheObj,String tripType,GdsSearchVo gdsSearchVo) {
         switch (ota){
             case PLATFORM_CTRIP:
-                CtripSearchResponse ctripSearchResponse = (CtripSearchResponse) cacheObj;
+                CtripSearchResponse ctripSearchResponse = JSON.parseObject(cacheObj.toString(),CtripSearchResponse.class);
                 CtripRouting ctripRouting = ctripSearchResponse.getRoutings().get(0);
                 String[] dataKeyArray = StringUtils.split(ctripRouting.getData(),"|");
                 Object data = gdsCacheService.findOne(dataKeyArray[0]);
@@ -244,7 +259,7 @@ public class GdsSearchServiceImpl implements GdsSearchService {
             SibeSegment segment = segmentList.get(i);
             generalPlanKeyBuilder
                     .append(segment.getCarrier())
-                    .append(Integer.parseInt(segment.getFlightNumber().substring(2)))
+                    .append(Integer.parseInt(segment.getFlightNumber()))
                     .append("-").append(originalCabins[i])
                     .append("-").append(segment.getDepTime())
                     .append("-").append(segment.getArrTime())

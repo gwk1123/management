@@ -77,7 +77,38 @@ secure:
 
 
 sxysibe:
+    compass:
+       switchgds: false
+       compresstype: GZIP
+    redis:
+      #刷新缓存开关，是否开机刷新缓存
+      refresh-switch: false
+      #是否将gds数据缓存至redis
+      refresh-gds-switch: true
+      #是否刷新其它站点数据至redis
+      refresh-other-site-switch: true
+      #刷新其它站点相关列表配置 OTA平台代码-站点代码 如： CTRIP-CT001
+      refresh-ota-sites: CTRIP-CT001
+    ota:
+      #森鑫源加密datakey ##森鑫源的Data Key
+      data-key: 6784397598743236
+      #OTA平台
+      #站点
+      ota: CTRIP
+      site:
+      #cid 可以理解为：app key 身份识别
+      cid:
+      #日志
+      logger-path: /var/log/sibe
+      #日志文件是否保存本地
+      logger-save-file-flag: true
+      #1.没有匹配上政策，或者没有政策录入其他说明， 则返回此信息 Rule Element 其他说明： 注意@@仅仅是区分 直接政策投放，还是手功政策投放
+      other-issue-ticket-msg: 只提供国际报销凭证（香港INVOICE）,所有退票改期必须提前48小时申请，否则视为误机,误机后不得退票。退改业务请在工作时间（周一至周五09:00~17:30）联系我们。友情提示：机票须按航班起飞时间顺序使用，否则无法登机。本公司只是机票代理，签证问题请自行确认，保证24小时以内出票。@@
+
+      #数据接收方OTA平台站点的缓存时间，单位秒
+      ota-site-cache-time: 600
     gds:
+        fuse-time: 20
         amadeus:
             app-key: test
             search-url: http://localhost:9091

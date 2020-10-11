@@ -1,15 +1,19 @@
 package com.ry.manage.direct.controller;
 
 
+import com.alibaba.fastjson.JSON;
 import com.ry.manage.direct.model.GdsSearchVm;
 import com.ry.manage.direct.model.GdsSearchVo;
 import com.ry.manage.direct.service.GdsSearchService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * @author gwk
+ */
 @RestController
 @RequestMapping("/direct")
 public class GdsSearchController {
@@ -17,8 +21,16 @@ public class GdsSearchController {
     @Autowired
     private GdsSearchService gdsSearchService;
 
-    @RequestMapping(value = "/gdsSearch")
+    @PostMapping(value = "/gds_search")
     public GdsSearchVo findGdsSearch(@RequestBody GdsSearchVm gdsSearchVm) throws InterruptedException {
+        String s = "{\n" +
+                "\"tripType\":\"1\",\n" +
+                "\"fromCity\":\"SZX\",\n" +
+                "\"toCity\":\"CSX\",\n" +
+                "\"fromDate\":\"20201120\",\n" +
+                "\"otaSites\":[\"CT001\"]\n" +
+                "}\n";
+        gdsSearchVm = JSON.parseObject(s,GdsSearchVm.class);
         return gdsSearchService.findGdsSearch(gdsSearchVm);
     }
 }
