@@ -17,6 +17,8 @@ public class GdsInfoVo {
     private String adultTaxGds;
     private String childPriceGds;
     private String childTaxGds;
+    private String gds;
+    private String pcc;
     /**
      * GDS行李额信息
      */

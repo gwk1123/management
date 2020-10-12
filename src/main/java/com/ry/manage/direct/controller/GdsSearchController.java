@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * @author gwk
  */
@@ -24,14 +27,17 @@ public class GdsSearchController {
 
     @PostMapping(value = "/gds_search")
     public CommonResult findGdsSearch(@RequestBody GdsSearchVm gdsSearchVm) throws InterruptedException {
-        String s = "{\n" +
-                "\"tripType\":\"1\",\n" +
-                "\"fromCity\":\"SZX\",\n" +
-                "\"toCity\":\"CSX\",\n" +
-                "\"fromDate\":\"20201120\",\n" +
-                "\"otaSites\":[\"CT001\"]\n" +
-                "}\n";
-        gdsSearchVm = JSON.parseObject(s,GdsSearchVm.class);
+//        String s = "{\n" +
+//                "\"tripType\":\"1\",\n" +
+//                "\"fromCity\":\"SZX\",\n" +
+//                "\"toCity\":\"CSX\",\n" +
+//                "\"fromDate\":\"20201120\",\n" +
+//                "\"otaSites\":[\"CT001\"]\n" +
+//                "}\n";
+//        gdsSearchVm = JSON.parseObject(s,GdsSearchVm.class);
+        Set<String> otaSiteSet = new HashSet<>();
+        otaSiteSet.add("CT001");
+        gdsSearchVm.setOtaSites(otaSiteSet);
         return CommonResult.success(gdsSearchService.findGdsSearch(gdsSearchVm));
     }
 }

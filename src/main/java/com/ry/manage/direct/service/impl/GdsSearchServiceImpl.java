@@ -58,6 +58,7 @@ public class GdsSearchServiceImpl implements GdsSearchService {
             SibeSearchResponse sibeSearchResponse = (SibeSearchResponse) gdsCacheService.findOne(cacheKey, gdsKey, 1);
             sibeSearchResponses.add(sibeSearchResponse);
         });
+        //处理GDS
         gdsSearchVo = this.handleGdsInfo(sibeSearchResponses, gdsSearchVm);
         //处理站点
         for (String otaSite : gdsSearchVm.getOtaSites()) {
@@ -67,7 +68,7 @@ public class GdsSearchServiceImpl implements GdsSearchService {
         logger.info("----{}",JSON.toJSONString(gdsSearchVo));
 
         LocalGdsSearchVo localGdsSearchVo =new LocalGdsSearchVo();
-        localGdsSearchVo.setOtaSite((Set<String>) gdsSearchVm.getOtaSites());
+        localGdsSearchVo.setOtaSite(gdsSearchVm.getOtaSites());
         localGdsSearchVo.setGdsSource(cacheContentKeySet);
         gdsSearchVo.setLocalGdsSearchVo(localGdsSearchVo);
         return gdsSearchVo;
@@ -151,6 +152,8 @@ public class GdsSearchServiceImpl implements GdsSearchService {
                     .append(segment.getCarrier())
                     .append(segment.getFlightNumber())
                     .append("-").append(segment.getCabin())
+                    .append("-").append(segment.getDepAirport())
+                    .append("-").append(segment.getArrAirport())
                     .append("-").append(segment.getDepTime())
                     .append("-").append(segment.getArrTime())
                     .append(";");
@@ -172,6 +175,8 @@ public class GdsSearchServiceImpl implements GdsSearchService {
             gdsInfoVo.setAdultTaxGds(String.valueOf(sibeRouting.getAdultTaxGDS()));
             gdsInfoVo.setChildPriceGds(String.valueOf(sibeRouting.getChildPriceGDS()));
             gdsInfoVo.setChildTaxGds(String.valueOf(sibeRouting.getChildTaxGDS()));
+            gdsInfoVo.setGds(sibeRouting.getReservationType());
+            gdsInfoVo.setPcc(sibeRouting.getOfficeId());
             gdsInfoVo.setSibeRouting(sibeRouting);
             List<GdsInfoVo> gdsInfoVoList = new ArrayList<>();
             gdsInfoVoList.add(gdsInfoVo);
@@ -190,10 +195,10 @@ public class GdsSearchServiceImpl implements GdsSearchService {
 
     public void handleOtaSite(String ota, String otaSite, GdsSearchVo gdsSearchVo, String cacheKey, String tripType) {
         Object cacheObj = gdsCacheService.findString(cacheKey + "_" + ota + "-" + otaSite);
-        setSearchSiteInfoToSearchInfoDTO(ota, cacheObj, tripType, gdsSearchVo);
+        setSearchSiteInfoToSearchInfoDTO(ota, cacheObj, tripType, gdsSearchVo, otaSite);
     }
 
-    private void setSearchSiteInfoToSearchInfoDTO(String ota, Object cacheObj, String tripType, GdsSearchVo gdsSearchVo) {
+    private void setSearchSiteInfoToSearchInfoDTO(String ota, Object cacheObj, String tripType, GdsSearchVo gdsSearchVo,String otaSite) {
         switch (ota) {
             case PLATFORM_CTRIP:
                 CtripSearchResponse ctripSearchResponse = JSON.parseObject(cacheObj.toString(), CtripSearchResponse.class);
@@ -202,12 +207,12 @@ public class GdsSearchServiceImpl implements GdsSearchService {
                 Object data = gdsCacheService.findOne(dataKeyArray[0]);
                 Map<String, String> dataInfoMapFromRedis = (Map<String, String>) data;
                 if (!CollectionUtils.isEmpty(dataInfoMapFromRedis)) {
-                    conversionOtaSiteInfo(dataInfoMapFromRedis, gdsSearchVo, tripType);
+                    conversionOtaSiteInfo(dataInfoMapFromRedis, gdsSearchVo, tripType,otaSite);
                 }
         }
     }
 
-    public void conversionOtaSiteInfo(Map<String, String> dataInfoMap, GdsSearchVo gdsSearchVo, String tripType) {
+    public void conversionOtaSiteInfo(Map<String, String> dataInfoMap, GdsSearchVo gdsSearchVo, String tripType,String otaSite) {
         Map<String, LocalSiteSearchVo> localSiteSearchVoMap = gdsSearchVo.getLocalSiteSearchVoMap();
         Collection<String> sibeRoutingDatas = dataInfoMap.values();
         sibeRoutingDatas.stream().filter(Objects::nonNull).forEach(dataStr -> {
@@ -217,11 +222,11 @@ public class GdsSearchServiceImpl implements GdsSearchService {
                 LocalSiteSearchVo localSiteSearchVo = localSiteSearchVoMap.get(otaSiteKey);
                 if (CollectionUtils.isEmpty(localSiteSearchVo.getSiteInfoVos())) {
                     List<SiteInfoVo> siteInfoVos = new ArrayList<>();
-                    SiteInfoVo siteInfoVo = setOtaSiteInfo(sibeRoutingData);
+                    SiteInfoVo siteInfoVo = setOtaSiteInfo(sibeRoutingData,otaSite);
                     siteInfoVos.add(siteInfoVo);
                     localSiteSearchVo.setSiteInfoVos(siteInfoVos);
                 } else {
-                    SiteInfoVo siteInfoVo = setOtaSiteInfo(sibeRoutingData);
+                    SiteInfoVo siteInfoVo = setOtaSiteInfo(sibeRoutingData,otaSite);
                     localSiteSearchVo.getSiteInfoVos().add(siteInfoVo);
                 }
             } else {
@@ -267,13 +272,15 @@ public class GdsSearchServiceImpl implements GdsSearchService {
                     .append(segment.getCarrier())
                     .append(Integer.parseInt(segment.getFlightNumber()))
                     .append("-").append(originalCabins[i])
+                    .append("-").append(segment.getDepAirport())
+                    .append("-").append(segment.getArrAirport())
                     .append("-").append(segment.getDepTime())
                     .append("-").append(segment.getArrTime())
                     .append(";");
         }
     }
 
-    public SiteInfoVo setOtaSiteInfo(SibeRoutingData sibeRoutingData) {
+    public SiteInfoVo setOtaSiteInfo(SibeRoutingData sibeRoutingData,String otaSite) {
         SiteInfoVo siteInfoVo = new SiteInfoVo();
         siteInfoVo.setAdultPriceOta(String.valueOf(sibeRoutingData.getSibePolicy().getPolicyAdultPriceOTA()));
         siteInfoVo.setAdultTaxOta(String.valueOf(sibeRoutingData.getSibePolicy().getPolicyAdultTaxOTA()));
@@ -281,6 +288,7 @@ public class GdsSearchServiceImpl implements GdsSearchService {
         siteInfoVo.setChildTaxOta(String.valueOf(sibeRoutingData.getSibePolicy().getPolicyChildTaxOTA()));
         siteInfoVo.setGds(sibeRoutingData.getSibeRoute().getSearchPcc().getGdsCode());
         siteInfoVo.setGdsPcc(sibeRoutingData.getSibeRoute().getSearchPcc().getPccCode());
+        siteInfoVo.setSite(otaSite);
         return siteInfoVo;
     }
 

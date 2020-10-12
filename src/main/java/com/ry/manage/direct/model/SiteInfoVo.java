@@ -11,6 +11,7 @@ public class SiteInfoVo {
     private String adultTaxOta;
     private String childPriceOta;
     private String childTaxOta;
+    private String site;
 
     private String gds;
     private String gdsPcc;
