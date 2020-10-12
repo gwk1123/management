@@ -209,6 +209,8 @@ public class GdsSearchServiceImpl implements GdsSearchService {
                 if (!CollectionUtils.isEmpty(dataInfoMapFromRedis)) {
                     conversionOtaSiteInfo(dataInfoMapFromRedis, gdsSearchVo, tripType,otaSite);
                 }
+                break;
+            default:
         }
     }
 
