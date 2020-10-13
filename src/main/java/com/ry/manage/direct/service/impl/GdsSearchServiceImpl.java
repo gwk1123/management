@@ -138,7 +138,6 @@ public class GdsSearchServiceImpl implements GdsSearchService {
      */
     private String generateGeneralGdsKey(SibeRouting routing, String tripType) {
         StringBuilder generalPlanKeyBuilder = new StringBuilder();
-        generalPlanKeyBuilder.append(routing.getValidatingCarrier());
         generateGdsKey(generalPlanKeyBuilder, routing.getFromSegments());
         if (tripType.equals(TRIP_TYPE_ROUND_WAY)) {
             generateGdsKey(generalPlanKeyBuilder, routing.getRetSegments());
@@ -248,7 +247,6 @@ public class GdsSearchServiceImpl implements GdsSearchService {
      */
     private static String generateGeneralPlanKeyForCtrip(String tripType, SibeRoutingData sibeRoutingData) {
         StringBuilder generalPlanKeyBuilder = new StringBuilder();
-        generalPlanKeyBuilder.append(sibeRoutingData.getValidatingCarrier());
 
         List<SibeSegment> segmentList = new ArrayList<>();
         segmentList.addAll(sibeRoutingData.getFromSegments());
