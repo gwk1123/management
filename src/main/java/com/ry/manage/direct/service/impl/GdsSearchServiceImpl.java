@@ -44,8 +44,8 @@ public class GdsSearchServiceImpl implements GdsSearchService {
         if (CollectionUtils.isEmpty(cacheContentKeySet)) {
             SibeSearchRequest sibeSearchRequest = generateSibeSearchRequest(gdsSearchVm);
             sibeSearchAsyncService.requestGdsAsyncB2C(sibeSearchRequest);
+            Thread.sleep(5000);
         }
-        Thread.sleep(5000);
         cacheContentKeySet = gdsCacheService.findAllKeys(cacheKey);
         GdsSearchVo gdsSearchVo = new GdsSearchVo();
         if (cacheContentKeySet == null || cacheContentKeySet.size() == 0) {
