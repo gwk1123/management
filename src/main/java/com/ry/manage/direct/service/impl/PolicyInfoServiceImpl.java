@@ -73,7 +73,7 @@ public class PolicyInfoServiceImpl extends ServiceImpl<PolicyInfoMapper, PolicyI
             policyInfo.setPolicyInfoBaggages(policyInfoBaggages);
         }
         if(DirectConstants.NORMAL.equals(policyInfo.getStatus())){
-            policyInfoRepository.saveOrUpdate(policyInfo);
+            policyInfoRepository.saveOrUpdateCache(policyInfo);
         }else {
             policyInfoRepository.delete(policyInfo);
         }
@@ -138,7 +138,7 @@ public class PolicyInfoServiceImpl extends ServiceImpl<PolicyInfoMapper, PolicyI
         }
         this.updateById(policyInfo);
         if(DirectConstants.NORMAL.equals(policyInfo.getStatus())){
-            policyInfoRepository.saveOrUpdate(policyInfo);
+            policyInfoRepository.saveOrUpdateCache(policyInfo);
         }else {
             policyInfoRepository.delete(policyInfo);
         }
@@ -163,7 +163,7 @@ public class PolicyInfoServiceImpl extends ServiceImpl<PolicyInfoMapper, PolicyI
             status.setPolicyInfoBaggages(policyInfoBaggages);
         }
         if(DirectConstants.NORMAL.equals(status.getStatus())){
-            policyInfoRepository.saveOrUpdate(status);
+            policyInfoRepository.saveOrUpdateCache(status);
         }else {
             policyInfoRepository.delete(status);
         }
