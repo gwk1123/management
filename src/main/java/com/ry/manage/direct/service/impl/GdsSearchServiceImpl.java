@@ -52,12 +52,15 @@ public class GdsSearchServiceImpl implements GdsSearchService {
             return gdsSearchVo;
         }
 
+        Long t1 = System.currentTimeMillis();
         //处理GDS缓存
         List<SibeSearchResponse> sibeSearchResponses = new ArrayList<>();
         cacheContentKeySet.stream().forEach(gdsKey -> {
             SibeSearchResponse sibeSearchResponse = (SibeSearchResponse) gdsCacheService.findOne(cacheKey, gdsKey, 1);
             sibeSearchResponses.add(sibeSearchResponse);
         });
+        Long t2 = System.currentTimeMillis();
+        logger.info("获取GDS数据耗时:{}s",(t2 - t1)/1000);
         //处理GDS
         gdsSearchVo = this.handleGdsInfo(sibeSearchResponses, gdsSearchVm);
         //处理站点
@@ -65,7 +68,7 @@ public class GdsSearchServiceImpl implements GdsSearchService {
             String ota = "CTRIP";
             handleOtaSite(ota, otaSite, gdsSearchVo, cacheKey, gdsSearchVm.getTripType());
         }
-        logger.info("----{}",JSON.toJSONString(gdsSearchVo));
+        logger.info("处理GDS和站点数据耗时:{}s",(System.currentTimeMillis() - t2)/1000);
 
         LocalGdsSearchVo localGdsSearchVo =new LocalGdsSearchVo();
         localGdsSearchVo.setOtaSite(gdsSearchVm.getOtaSites());

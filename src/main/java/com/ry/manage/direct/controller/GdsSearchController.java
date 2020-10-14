@@ -27,14 +27,6 @@ public class GdsSearchController {
 
     @PostMapping(value = "/gds_search")
     public CommonResult findGdsSearch(@RequestBody GdsSearchVm gdsSearchVm) throws InterruptedException {
-//        String s = "{\n" +
-//                "\"tripType\":\"1\",\n" +
-//                "\"fromCity\":\"SZX\",\n" +
-//                "\"toCity\":\"CSX\",\n" +
-//                "\"fromDate\":\"20201120\",\n" +
-//                "\"otaSites\":[\"CT001\"]\n" +
-//                "}\n";
-//        gdsSearchVm = JSON.parseObject(s,GdsSearchVm.class);
         Set<String> otaSiteSet = new HashSet<>();
         otaSiteSet.add("CT001");
 //        otaSiteSet.add("CT002");
