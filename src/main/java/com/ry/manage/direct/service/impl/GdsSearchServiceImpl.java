@@ -13,13 +13,17 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executor;
 
 @Service
 public class GdsSearchServiceImpl implements GdsSearchService {
@@ -27,6 +31,9 @@ public class GdsSearchServiceImpl implements GdsSearchService {
     private Logger logger = LoggerFactory.getLogger(GdsSearchServiceImpl.class);
     private static final String TRIP_TYPE_ROUND_WAY = "2";
     private static final String PLATFORM_CTRIP = "CTRIP";
+    @Autowired
+    @Qualifier("asyncExecutor")
+    private Executor asyncExecutor;
 
     @Autowired
     private GdsCacheService gdsCacheService;

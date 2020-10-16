@@ -29,7 +29,7 @@ public class GdsSearchController {
     public CommonResult findGdsSearch(@RequestBody GdsSearchVm gdsSearchVm) throws InterruptedException {
         Set<String> otaSiteSet = new HashSet<>();
         otaSiteSet.add("CT001");
-//        otaSiteSet.add("CT002");
+        otaSiteSet.add("CT002");
         gdsSearchVm.setOtaSites(otaSiteSet);
         return CommonResult.success(gdsSearchService.findGdsSearch(gdsSearchVm));
     }
