@@ -31,9 +31,6 @@ public class GdsSearchServiceImpl implements GdsSearchService {
     private Logger logger = LoggerFactory.getLogger(GdsSearchServiceImpl.class);
     private static final String TRIP_TYPE_ROUND_WAY = "2";
     private static final String PLATFORM_CTRIP = "CTRIP";
-    @Autowired
-    @Qualifier("asyncExecutor")
-    private Executor asyncExecutor;
 
     @Autowired
     private GdsCacheService gdsCacheService;
