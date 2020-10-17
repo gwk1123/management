@@ -13,17 +13,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Executor;
 
 @Service
 public class GdsSearchServiceImpl implements GdsSearchService {
@@ -64,7 +60,7 @@ public class GdsSearchServiceImpl implements GdsSearchService {
             sibeSearchResponses.add(sibeSearchResponse);
         });
         Long t2 = System.currentTimeMillis();
-        logger.info("获取GDS数据耗时:{}s",(t2 - t1)/1000);
+        logger.info("获取GDS数据耗时:{}s", (t2 - t1) / 1000);
         //处理GDS
         gdsSearchVo = this.handleGdsInfo(sibeSearchResponses, gdsSearchVm);
         //处理站点
@@ -72,9 +68,9 @@ public class GdsSearchServiceImpl implements GdsSearchService {
             String ota = "CTRIP";
             handleOtaSite(ota, otaSite, gdsSearchVo, cacheKey, gdsSearchVm.getTripType());
         }
-        logger.info("处理GDS和站点数据耗时:{}s",(System.currentTimeMillis() - t2)/1000);
+        logger.info("处理GDS和站点数据耗时:{}s", (System.currentTimeMillis() - t2) / 1000);
 
-        LocalGdsSearchVo localGdsSearchVo =new LocalGdsSearchVo();
+        LocalGdsSearchVo localGdsSearchVo = new LocalGdsSearchVo();
         localGdsSearchVo.setOtaSite(gdsSearchVm.getOtaSites());
         localGdsSearchVo.setGdsSource(cacheContentKeySet);
         gdsSearchVo.setLocalGdsSearchVo(localGdsSearchVo);
@@ -204,7 +200,7 @@ public class GdsSearchServiceImpl implements GdsSearchService {
         setSearchSiteInfoToSearchInfoDTO(ota, cacheObj, tripType, gdsSearchVo, otaSite);
     }
 
-    private void setSearchSiteInfoToSearchInfoDTO(String ota, Object cacheObj, String tripType, GdsSearchVo gdsSearchVo,String otaSite) {
+    private void setSearchSiteInfoToSearchInfoDTO(String ota, Object cacheObj, String tripType, GdsSearchVo gdsSearchVo, String otaSite) {
         switch (ota) {
             case PLATFORM_CTRIP:
                 CtripSearchResponse ctripSearchResponse = JSON.parseObject(cacheObj.toString(), CtripSearchResponse.class);
@@ -213,14 +209,14 @@ public class GdsSearchServiceImpl implements GdsSearchService {
                 Object data = gdsCacheService.findOne(dataKeyArray[0]);
                 Map<String, String> dataInfoMapFromRedis = (Map<String, String>) data;
                 if (!CollectionUtils.isEmpty(dataInfoMapFromRedis)) {
-                    conversionOtaSiteInfo(dataInfoMapFromRedis, gdsSearchVo, tripType,otaSite);
+                    conversionOtaSiteInfo(dataInfoMapFromRedis, gdsSearchVo, tripType, otaSite);
                 }
                 break;
             default:
         }
     }
 
-    public void conversionOtaSiteInfo(Map<String, String> dataInfoMap, GdsSearchVo gdsSearchVo, String tripType,String otaSite) {
+    public void conversionOtaSiteInfo(Map<String, String> dataInfoMap, GdsSearchVo gdsSearchVo, String tripType, String otaSite) {
         Map<String, LocalSiteSearchVo> localSiteSearchVoMap = gdsSearchVo.getLocalSiteSearchVoMap();
         Collection<String> sibeRoutingDatas = dataInfoMap.values();
         sibeRoutingDatas.stream().filter(Objects::nonNull).forEach(dataStr -> {
@@ -230,11 +226,11 @@ public class GdsSearchServiceImpl implements GdsSearchService {
                 LocalSiteSearchVo localSiteSearchVo = localSiteSearchVoMap.get(otaSiteKey);
                 if (CollectionUtils.isEmpty(localSiteSearchVo.getSiteInfoVos())) {
                     List<SiteInfoVo> siteInfoVos = new ArrayList<>();
-                    SiteInfoVo siteInfoVo = setOtaSiteInfo(sibeRoutingData,otaSite);
+                    SiteInfoVo siteInfoVo = setOtaSiteInfo(sibeRoutingData, otaSite);
                     siteInfoVos.add(siteInfoVo);
                     localSiteSearchVo.setSiteInfoVos(siteInfoVos);
                 } else {
-                    SiteInfoVo siteInfoVo = setOtaSiteInfo(sibeRoutingData,otaSite);
+                    SiteInfoVo siteInfoVo = setOtaSiteInfo(sibeRoutingData, otaSite);
                     localSiteSearchVo.getSiteInfoVos().add(siteInfoVo);
                 }
             } else {
@@ -287,7 +283,7 @@ public class GdsSearchServiceImpl implements GdsSearchService {
         }
     }
 
-    public SiteInfoVo setOtaSiteInfo(SibeRoutingData sibeRoutingData,String otaSite) {
+    public SiteInfoVo setOtaSiteInfo(SibeRoutingData sibeRoutingData, String otaSite) {
         SiteInfoVo siteInfoVo = new SiteInfoVo();
         siteInfoVo.setAdultPriceOta(String.valueOf(sibeRoutingData.getSibePolicy().getPolicyAdultPriceOTA()));
         siteInfoVo.setAdultTaxOta(String.valueOf(sibeRoutingData.getSibePolicy().getPolicyAdultTaxOTA()));
