@@ -290,8 +290,10 @@ public class GdsSearchServiceImpl implements GdsSearchService {
         siteInfoVo.setChildPriceOta(String.valueOf(sibeRoutingData.getSibePolicy().getPolicyChildPriceOTA()));
         siteInfoVo.setChildTaxOta(String.valueOf(sibeRoutingData.getSibePolicy().getPolicyChildTaxOTA()));
         siteInfoVo.setGds(sibeRoutingData.getSibeRoute().getSearchPcc().getGdsCode());
-        siteInfoVo.setGdsPcc(sibeRoutingData.getSibeRoute().getSearchPcc().getPccCode());
+        siteInfoVo.setPcc(sibeRoutingData.getSibeRoute().getSearchPcc().getPccCode());
         siteInfoVo.setSite(otaSite);
+        siteInfoVo.setPolicyInfoId(String.valueOf(sibeRoutingData.getSibePolicy().getPolicyId()));
+        siteInfoVo.setPolicyGlobalId(String.valueOf(sibeRoutingData.getSibePolicy().getGlobalPolicyId()));
         return siteInfoVo;
     }
 

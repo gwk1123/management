@@ -13,8 +13,10 @@ public class SiteInfoVo {
     private String childTaxOta;
     private String site;
 
+    private String policyInfoId;
+    private String policyGlobalId;
     private String gds;
-    private String gdsPcc;
+    private String pcc;
 
     /**
      * ota行李额信息
