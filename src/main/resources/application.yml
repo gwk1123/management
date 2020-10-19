@@ -90,7 +90,7 @@ sxysibe:
       #刷新其它站点相关列表配置 OTA平台代码-站点代码 如： CTRIP-CT001
       refresh-ota-sites: CTRIP-CT001,CTRIP-CT002
     ota:
-      #森鑫源加密datakey ##森鑫源的Data Key
+      #加密datakey ##Data Key
       data-key: 6784397598743236
       #OTA平台
       #站点
