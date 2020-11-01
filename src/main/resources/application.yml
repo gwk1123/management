@@ -131,7 +131,7 @@ sxysibe:
                 ctct: 8618948735931
         nh:
           app-key: test
-          search-url: http://127.0.0.1:8086
+          search-url: http://192.168.1.101:8086
           other-url: http://192.168.3.221:19091
           contact:
             name: HONG KONG NG CHOW INTERNATIONAL TRAVEL LTD - WEBSVC
@@ -141,7 +141,7 @@ sxysibe:
             email: MT.sxycsh@cywz.cn
         cq:
           app-key: test
-          search-url: http://127.0.0.1:8086
+          search-url: http://192.168.1.101:8086
           other-url: http://192.168.3.221:19091
           contact:
             name: HONG KONG NG CHOW INTERNATIONAL TRAVEL LTD - WEBSVC
@@ -151,7 +151,7 @@ sxysibe:
             email: MT.sxycsh@cywz.cn
         aq:
           app-key: test
-          search-url: http://127.0.0.1:8086
+          search-url: http://192.168.1.101:8086
           other-url: http://192.168.3.221:19091
           contact:
             name: HONG KONG NG CHOW INTERNATIONAL TRAVEL LTD - WEBSVC
