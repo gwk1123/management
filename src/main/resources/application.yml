@@ -1,6 +1,15 @@
 server:
   port: 8085
+
+eureka:
+  client:
+    serviceUrl: #注册中心的注册地址
+      defaultZone: http://127.0.0.1:8090/eureka/
+
 spring:
+  application:
+    name: management-client #服务名称--调用的时候根据名称来调用该服务的方法
+
   datasource:
     url: jdbc:mysql://8.129.213.16:3306/ry-vue?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&zeroDateTimeBehavior=convertToNull
     username: root
