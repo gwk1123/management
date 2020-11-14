@@ -46,7 +46,7 @@ mybatis-plus:
 xxl:
   job:
     admin:
-      addresses: http://8.129.213.16:8084/xxl-job-admin/
+      addresses: http://127.0.0.1:8091/xxl-job-admin/
     accessToken:
     executor:
       appname: xxl-job-management
