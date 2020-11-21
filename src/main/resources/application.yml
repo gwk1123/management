@@ -4,7 +4,8 @@ server:
 eureka:
   client:
     serviceUrl: #注册中心的注册地址
-      defaultZone: http://127.0.0.1:8090/eureka/
+#      defaultZone: http://127.0.0.1:8090/eureka/
+      defaultZone: http://192.168.1.101:8090/eureka/
 
 spring:
   application:
@@ -46,7 +47,8 @@ mybatis-plus:
 xxl:
   job:
     admin:
-      addresses: http://127.0.0.1:8091/xxl-job-admin/
+#      addresses: http://127.0.0.1:8091/xxl-job-admin/
+      addresses: http://192.168.1.101:8091/xxl-job-admin/
     accessToken:
     executor:
       appname: xxl-job-management
