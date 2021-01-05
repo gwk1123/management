@@ -4,21 +4,21 @@ server:
 eureka:
   client:
     serviceUrl: #注册中心的注册地址
-#      defaultZone: http://127.0.0.1:8090/eureka/
-      defaultZone: http://192.168.1.101:8090/eureka/
+      defaultZone: http://106.75.115.170:8090/eureka/
+#      defaultZone: http://192.168.1.101:8090/eureka/
 
 spring:
   application:
     name: management-client #服务名称--调用的时候根据名称来调用该服务的方法
 
   datasource:
-    url: jdbc:mysql://8.129.213.16:3306/ry-vue?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&zeroDateTimeBehavior=convertToNull
+    url: jdbc:mysql://106.75.115.170:3306/ry-vue?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&zeroDateTimeBehavior=convertToNull
     username: root
     password: 123456
     druid:
       initial-size: 5
       min-idle: 10
-      max-active: 20
+      max-active: 80
       web-stat-filter:
         exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*"
       stat-view-servlet:
@@ -27,7 +27,7 @@ spring:
 
   redis:
     database: 0
-    host: 8.129.213.16
+    host: 106.75.115.170
     port: 6379
 
     pool:
@@ -47,8 +47,8 @@ mybatis-plus:
 xxl:
   job:
     admin:
-#      addresses: http://127.0.0.1:8091/xxl-job-admin/
-      addresses: http://192.168.1.101:8091/xxl-job-admin/
+      addresses: http://106.75.115.170:8091/xxl-job-admin/
+#      addresses: http://192.168.1.101:8091/xxl-job-admin/
     accessToken:
     executor:
       appname: xxl-job-management

@@ -2,6 +2,7 @@ package com.ry.manage.direct.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ry.manage.common.CommonResult;
 import com.ry.manage.direct.service.ResignConfigService;
 import com.sibecommon.repository.entity.ResignConfig;
 import io.swagger.annotations.Api;
@@ -31,27 +32,27 @@ public class ResignConfigController {
 
     @ApiOperation(value = "新增")
     @PostMapping("/resign_config")
-    public boolean saveResignConfig(@RequestBody ResignConfig resignConfig){
-    return esignConfigService.saveResignConfig(resignConfig);
+    public CommonResult saveResignConfig(@RequestBody ResignConfig resignConfig){
+    return CommonResult.success(esignConfigService.saveResignConfig(resignConfig));
     }
 
     @ApiOperation(value = "删除")
     @DeleteMapping("/resign_config/{id}")
-    public boolean removeResignConfig(@PathVariable("id") String id){
-    return esignConfigService.removeResignConfig(id);
+    public CommonResult removeResignConfig(@PathVariable("id") String id){
+    return CommonResult.success(esignConfigService.removeResignConfig(id));
     }
 
     @ApiOperation(value = "批量删除")
     @DeleteMapping("/resign_configs")
-    public boolean removeResignConfigByIds(@RequestBody List <String> ids){
-        return esignConfigService.removeResignConfigByIds(ids);
+    public CommonResult removeResignConfigByIds(@RequestBody List <String> ids){
+        return CommonResult.success(esignConfigService.removeResignConfigByIds(ids));
         }
 
 
         @ApiOperation(value = "更新")
         @PutMapping("/resign_config")
-        public boolean updateResignConfig(@RequestBody ResignConfig resignConfig){
-        return esignConfigService.updateResignConfig(resignConfig);
+        public CommonResult updateResignConfig(@RequestBody ResignConfig resignConfig){
+        return CommonResult.success(esignConfigService.updateResignConfig(resignConfig));
         }
 
         @ApiOperation(value = "查询分页数据")
@@ -60,14 +61,14 @@ public class ResignConfigController {
         @ApiImplicitParam(name = "resignConfig", value = "查询条件")
         })
         @GetMapping("/resign_config/page")
-        public IPage<ResignConfig> pageResignConfig(Page<ResignConfig> page,ResignConfig resignConfig){
-        return esignConfigService.pageResignConfig(page, resignConfig);
+        public CommonResult pageResignConfig(Page<ResignConfig> page,ResignConfig resignConfig){
+        return CommonResult.success(esignConfigService.pageResignConfig(page, resignConfig));
         }
 
         @ApiOperation(value = "id查询")
         @GetMapping("/resign_config/{id}")
-        public ResignConfig getResignConfigById(@PathVariable String id){
-        return esignConfigService.getResignConfigById(id);
+        public CommonResult getResignConfigById(@PathVariable String id){
+        return CommonResult.success(esignConfigService.getResignConfigById(id));
         }
 
         }
