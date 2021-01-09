@@ -122,7 +122,8 @@ sxysibe:
         fuse-time: 20
         amadeus:
             app-key: test
-            search-url: http://localhost:9091
+            search-url: http://106.75.115.170:9091
+#            search-url: http://localhost:9091
 #            verify-url: http://localhost:9091
 #            order-url: http://localhost:9091
             contact:
@@ -142,7 +143,8 @@ sxysibe:
                 ctct: 8618948735931
         nh:
           app-key: test
-          search-url: http://192.168.1.101:8086
+          search-url: http://106.75.115.170:8086
+#          search-url: http://192.168.1.101:8086
           other-url: http://192.168.3.221:19091
           contact:
             name: HONG KONG NG CHOW INTERNATIONAL TRAVEL LTD - WEBSVC
@@ -152,7 +154,8 @@ sxysibe:
             email: MT.sxycsh@cywz.cn
         cq:
           app-key: test
-          search-url: http://192.168.1.101:8086
+          search-url: http://106.75.115.170:8086
+#          search-url: http://192.168.1.101:8086
           other-url: http://192.168.3.221:19091
           contact:
             name: HONG KONG NG CHOW INTERNATIONAL TRAVEL LTD - WEBSVC
@@ -162,7 +165,8 @@ sxysibe:
             email: MT.sxycsh@cywz.cn
         aq:
           app-key: test
-          search-url: http://192.168.1.101:8086
+          search-url: http://106.75.115.170:8086
+#          search-url: http://192.168.1.101:8086
           other-url: http://192.168.3.221:19091
           contact:
             name: HONG KONG NG CHOW INTERNATIONAL TRAVEL LTD - WEBSVC
