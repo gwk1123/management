@@ -1,7 +1,5 @@
 package com.ry.manage.common;
 
-import com.alibaba.fastjson.JSON;
-
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -128,7 +126,6 @@ public class VerifyCodeUtils
             affine.setToRotation(Math.PI / 4 * rand.nextDouble() * (rand.nextBoolean() ? 1 : -1),
                     (w / verifySize) * i + fontSize / 2, h / 2);
             g2.setTransform(affine);
-            System.out.println("g2:"+ JSON.toJSONString(g2)+",chars:"+JSON.toJSONString(chars));
             g2.drawChars(chars, i, 1, ((w - 10) / verifySize) * i + 5, h / 2 + fontSize / 2 - 10);
         }
 
